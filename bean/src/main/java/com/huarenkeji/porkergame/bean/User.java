@@ -1,6 +1,5 @@
 package com.huarenkeji.porkergame.bean;
 
-import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
 
