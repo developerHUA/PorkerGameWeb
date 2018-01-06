@@ -22,7 +22,7 @@ public class UserController {
 
 
         try {
-            userService.loadUserByUsername("admin");
+            userService.loadUserByUsername("huayaowei");
             logger.info("load user ");
         }catch (Exception e){
             logger.error(e.getLocalizedMessage(), e);
