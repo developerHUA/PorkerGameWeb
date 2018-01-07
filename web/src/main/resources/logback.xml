@@ -3,7 +3,7 @@
 
     <appender name="default" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/app/logs/back.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/app/logs/web%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder>
