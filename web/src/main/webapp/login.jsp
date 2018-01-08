@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h1>系统登录</h1>
+<h1>登录</h1>
 
 <div>
     <c:if test="${param.error != null}">
@@ -16,7 +16,7 @@
         <p>您已注销！</p>
     </c:if>
 </div>
-<c:url value="/login.jsp" var="loginUrl"/>
+<c:url value="/login" var="loginUrl"/>
 <form action="${loginUrl}" method="post" id="loginForm">
     <div>
         <input type="text" name="username" class="username" placeholder="用户名" autocomplete="off"/>

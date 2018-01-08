@@ -15,8 +15,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @EnableScheduling
-@ComponentScan(basePackages = {"com.huarenkeji.porkergame.web.controller","com.aitongyi.web.service"})
-@MapperScan("com.huarenkeji.porkergame.dao.mapper")
+@ComponentScan(basePackages = {"com.huarenkeji.porkergame.controller","com.huarenkeji.porkergame.service"})
+@MapperScan("com.huarenkeji.porkergame.mapper")
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -50,5 +50,9 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         common.setMaxUploadSize(10 * 1024 * 1024);//10M
         return common;
     }
+
+
+
+
 
 }
