@@ -7,7 +7,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 @Configurable
-@PropertySource(value = "classpath:web.properties")
+@PropertySource(value = "classpath:jdbc.properties")
 public class WebConfig {
 
     @Bean

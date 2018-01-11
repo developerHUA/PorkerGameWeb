@@ -20,8 +20,8 @@ public class UserService {
 
 
     @Transactional
-    public User loadUserByUsername(String username) {
-        return userMapper.loadUserByUsername(username);
+    public User loadUserByOpenId(String openId) {
+        return userMapper.loadUserByUsername(openId);
     }
 
     @Transactional

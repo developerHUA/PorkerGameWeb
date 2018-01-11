@@ -1,6 +1,7 @@
 package com.huarenkeji.porkergame.bean;
 
 
+
 import java.util.Date;
 
 
@@ -12,14 +13,23 @@ public class User {
     private int diamond;
     private String phoneNumber;
     private String invitationCode;
-    private boolean enabled;
+    private String openId;
+    private String headImageUrl;
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getOpenId() {
+        return openId;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getHeadImageUrl() {
+        return headImageUrl;
+    }
+
+    public void setHeadImageUrl(String headImageUrl) {
+        this.headImageUrl = headImageUrl;
     }
 
     public int getDiamond() {
@@ -73,5 +83,20 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", createDate=" + createDate +
+                ", diamond=" + diamond +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", invitationCode='" + invitationCode + '\'' +
+                ", openId='" + openId + '\'' +
+                ", headImageUrl='" + headImageUrl + '\'' +
+                '}';
     }
 }

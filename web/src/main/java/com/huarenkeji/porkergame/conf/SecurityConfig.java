@@ -73,5 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         headerWriterFilterList.add(headerWriter);
         HeaderWriterFilter headerFilter = new HeaderWriterFilter(headerWriterFilterList);
         http.addFilter(headerFilter);
+        http.csrf().disable();
     }
 }
