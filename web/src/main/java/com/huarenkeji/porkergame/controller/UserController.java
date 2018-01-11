@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -39,26 +36,16 @@ public class UserController {
     }
     @RequestMapping(value = "/wxLogin", method = RequestMethod.POST)
     @ResponseBody
-    public String saveUser(@RequestBody String params) {
-        logger.debug("----" + params);
-
-
-        Params<User> baseParam = JSON.parseObject(params, new TypeReference<Params<User>>() {
-        });
-        Result result = new Result();
-        if(!baseParam.keyIsValid()) {
-            result.setCode(NetConfig.KEY_INVALID_CODE);
-            result.setMessage(NetConfig.KEY_INVALID_MESSAGE);
-            return JSON.toJSONString(result);
-        }
+    public String saveUser(@RequestBody String param) {
+        logger.debug("----" + param);
 
 
 
 
-        result.setCode(NetConfig.SUCCESS_CODE);
-        result.setMessage(NetConfig.SUCCESS_MESSAGE);
 
-        return JSON.toJSONString(result);
+
+
+        return Result.getSuccessJson();
     }
 
 }

@@ -1,12 +1,9 @@
 package com.huarenkeji.porkergame.base;
 
-import com.alibaba.fastjson.JSON;
 import com.huarenkeji.porkergame.bean.DeviceInfo;
-import com.huarenkeji.porkergame.common.MD5;
 
 import java.io.Serializable;
 
-import static com.huarenkeji.porkergame.config.NetConfig.SALT;
 
 public class Params<T> implements Serializable {
     private String key; //验证请求接口
@@ -65,13 +62,6 @@ public class Params<T> implements Serializable {
         this.params = params;
     }
 
-    /**
-     *  验证key是否有效
-     */
-    public boolean keyIsValid() {
-        String key = MD5.getMessageDigest(MD5.getMessageDigest((JSON.toJSONString(getParams()) + getTime() + SALT).getBytes()).getBytes());
-        return key.equals(getKey());
 
-    }
 
 }
