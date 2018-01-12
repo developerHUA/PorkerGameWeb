@@ -26,9 +26,6 @@ public class RequestJsonUtils {
      * <pre>
      * 举例：
      * </pre>
-     * @param request
-     * @return
-     * @throws IOException
      */
     public static byte[] getRequestPostBytes(HttpServletRequest request)
             throws IOException {
@@ -54,9 +51,6 @@ public class RequestJsonUtils {
      * <pre>
      * 举例：
      * </pre>
-     * @param request
-     * @return
-     * @throws IOException
      */
     public static String getRequestPostStr(HttpServletRequest request)
             throws IOException {

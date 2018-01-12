@@ -26,6 +26,6 @@ public class WebApplicationInitializer extends AbstractAnnotationConfigDispatche
 
     @Override
     protected Filter[] getServletFilters() {
-        return null;
+        return  new Filter[]{new CheckKeyFilter()};
     }
 }

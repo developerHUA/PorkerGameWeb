@@ -48,14 +48,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         return common;
     }
 
-    @Bean
-    public SpringMVCInterceptor springMVCInterceptor() {
-        return new SpringMVCInterceptor();
-    }
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(springMVCInterceptor());
-    }
 
 
 
