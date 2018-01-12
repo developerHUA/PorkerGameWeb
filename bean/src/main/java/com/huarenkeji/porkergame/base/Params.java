@@ -8,8 +8,6 @@ import java.io.Serializable;
 public class Params<T> implements Serializable {
     private String key; //验证请求接口
     private DeviceInfo deviceInfo;//设备信息
-    private String u;// 系统类型 i-->ios , a --> android
-    private String appV; // 应用版本
     private long time;
     private T params;
 
@@ -28,22 +26,6 @@ public class Params<T> implements Serializable {
 
     public void setDeviceInfo(DeviceInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
-    }
-
-    public String getU() {
-        return u;
-    }
-
-    public void setU(String u) {
-        this.u = u;
-    }
-
-    public String getAppV() {
-        return appV;
-    }
-
-    public void setAppV(String appV) {
-        this.appV = appV;
     }
 
     public long getTime() {
