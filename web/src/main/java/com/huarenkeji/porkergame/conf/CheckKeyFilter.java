@@ -24,7 +24,7 @@ public class CheckKeyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (checkKey(request, response, chain)) {
-            chain.doFilter(request, response);
+
 
         }
     }
@@ -47,12 +47,15 @@ public class CheckKeyFilter implements Filter {
             String curKey = MD5.getMessageDigest(MD5.getMessageDigest((paramsJson + time + NetConfig.SALT).getBytes()).getBytes());
             if (curKey.equals(key)) {
                 // key is valid
+                chain.doFilter(bodyRequest, response);
                 return true;
             } else {
-                response.getWriter().append(Result.getInValidKeyJson()).append("----").append(curKey);
+                String returnJson = JSON.toJSONString(Result.getInValidKeyJson());
+                response.getWriter().append(returnJson).append("----").append(curKey);
                 return false;
             }
         }
+
         return true;
     }
 

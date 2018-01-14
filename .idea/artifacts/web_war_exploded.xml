@@ -13,9 +13,6 @@
           <element id="archive" name="bean-1.0-SNAPSHOT.jar">
             <element id="module-output" name="bean" />
           </element>
-          <element id="archive" name="common-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="common" />
-          </element>
           <element id="archive" name="service-1.0-SNAPSHOT.jar">
             <element id="module-output" name="service" />
           </element>
@@ -29,6 +26,9 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:4.0.2.RELEASE" />
+          <element id="archive" name="common-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="common" />
+          </element>
           <element id="library" level="project" name="Maven: org.springframework:spring-core:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.1.6.RELEASE" />
@@ -37,6 +37,9 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.4" />
           <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.2.2" />
           <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
           <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.2" />

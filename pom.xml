@@ -48,6 +48,11 @@
             <version>4.1.6.RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>2.2.2</version>
@@ -140,82 +145,6 @@
         </dependency>
         <!-- end -->
     </dependencies>
-
-    <!-- repositories节点是配置maven下载jar的中央仓库，
-    默认的是国外的，下载奇慢无比，推荐使用自己搭建sonatype nexus中央仓库 -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>public</name>
-            <url>http://172.18.100.83:8081/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>http://repo1.maven.org/maven2/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jboss-deprecated</id>
-            <name>JBoss Deprecated</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/deprecated/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jboss-maven2-brew</id>
-            <name>JBoss Maven 2 Brew Repository</name>
-            <url>http://repository.jboss.org/maven2-brew/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>io.spring.repo.maven.release</id>
-            <url>http://repo.spring.io/release/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>io.spring.repo.maven.milestone</id>
-            <url>http://repo.spring.io/milestone/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
 
     <build>

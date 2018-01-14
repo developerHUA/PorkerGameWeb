@@ -1,10 +1,10 @@
 package com.huarenkeji.porkergame.base;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.huarenkeji.porkergame.config.NetConfig;
 
 import java.io.Serializable;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result implements Serializable {
     private int code;
     private String message;
@@ -53,21 +53,21 @@ public class Result implements Serializable {
         this.result = result;
     }
 
-    public static String getSuccessJson() {
+    public static Result getSuccessJson() {
         return getSuccessJson(null);
     }
 
 
-    public static String getSuccessJson(Object result) {
+    public static Result getSuccessJson(Object result) {
         Result baseResult = new Result(NetConfig.SUCCESS_CODE, NetConfig.SUCCESS_MESSAGE, NetConfig.SUCCESS_ERROR);
         baseResult.setResult(result);
-        return JSON.toJSONString(baseResult);
+        return baseResult;
 
     }
 
 
-    public static String getInValidKeyJson() {
-        return JSON.toJSONString(new Result(NetConfig.KEY_INVALID_CODE,NetConfig.KEY_INVALID_MESSAGE,NetConfig.KEY_INVALID_ERROR));
+    public static Result getInValidKeyJson() {
+        return new Result(NetConfig.KEY_INVALID_CODE,NetConfig.KEY_INVALID_MESSAGE,NetConfig.KEY_INVALID_ERROR);
     }
 
 
