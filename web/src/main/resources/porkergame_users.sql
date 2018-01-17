@@ -16,25 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nickname` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `diamond` int(11) NOT NULL,
-  `phoneNumber` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `invitationCode` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastLoginTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `openId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `headImageUrl` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `headimgurl` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `sex` int(11) DEFAULT NULL,
+  `unionid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -46,4 +47,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-11 19:27:07
+-- Dump completed on 2018-01-17 19:08:43

@@ -3,6 +3,7 @@ package com.huarenkeji.porkergame.controller;
 import com.huarenkeji.porkergame.base.Params;
 import com.huarenkeji.porkergame.base.Result;
 import com.huarenkeji.porkergame.bean.User;
+import com.huarenkeji.porkergame.common.MD5;
 import com.huarenkeji.porkergame.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 
 @Controller
@@ -36,10 +39,23 @@ public class UserController {
     @RequestMapping(value = "/wxLogin", method = RequestMethod.POST)
     @ResponseBody
     public Result saveUser(@RequestBody Params<User> params) {
-        logger.debug("----" + params.getParams().toString());
+        User user = params.getParams();
+        Date currentDate = new Date();
+        String token = MD5.getMessageDigest(String.valueOf(currentDate.getTime()).getBytes());
+        user.setLastLoginTime(currentDate);
+        user.setToken(token);
 
+        if (userService.loadUserByOpenId(user.getOpenId()) != null) {
+            userService.upDateUserInfo(user);
+            logger.debug("-----upDateUserInfo");
+        } else {
+            user.setCreateDate(currentDate);
+            user.setDiamond(8);
+            userService.saveUser(user);
+            logger.debug("-----saveUser");
+        }
 
-        return Result.getSuccessJson();
+        return Result.getSuccessJson(userService.loadUserByOpenId(user.getOpenId()));
     }
 
 }

@@ -5,20 +5,22 @@ import org.apache.ibatis.annotations.*;
 
 public interface UserMapper {
 
-    @Select(value = "select * from users where username = #{username} ")
+    @Select(value = "select * from users where openId = #{openId} ")
     @Results({
             @Result(id = true, column = "userId", property = "userId"),
-            @Result(column = "userId", property = "userId"),
-            @Result(column = "headImageUrl", property = "headImageUrl"),
+            @Result(column = "headimgurl", property = "headimgurl"),
             @Result(column = "diamond", property = "diamond"),
-            @Result(column = "phoneNumber", property = "phoneNumber"),
-            @Result(column = "invitationCode", property = "invitationCode")
+            @Result(column = "invitationCode", property = "invitationCode"),
+            @Result(column = "token", property = "token")
     })
     User loadUserByUsername(@Param("openId") String openId);
 
-    @Insert(value = "insert into users (username, password, createDate,enabled,diamond,phoneNumber,invitationCode,lastLoginTime,openId,headImageUrl)" +
-            " value(#{username},#{password},#{createDate},#{enabled},#{diamond},#{phoneNumber},#{invitationCode}," +
-            "#{lastLoginTime},#{openId},#{headImageUrl})")
+    @Insert(value = "insert into users (nickname, sex,createDate,diamond,invitationCode,lastLoginTime,openId,headimgurl,token,unionid)" +
+            " value(#{nickname},#{sex},#{createDate},#{diamond},#{invitationCode}," +
+            "#{lastLoginTime},#{openId},#{headimgurl},#{token},#{unionid})")
     void saveUser(User user);
 
+    @Update(value = "update users set nickname = #{nickname}, headimgurl = #{headimgurl}, " +
+            "token = #{token}, sex = #{sex}, lastLoginTime = #{lastLoginTime} where openId = #{openId}")
+    void upDateUserInfo(User user);
 }

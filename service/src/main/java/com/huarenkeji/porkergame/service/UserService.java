@@ -31,8 +31,13 @@ public class UserService {
 //        getError();
     }
 
-    private void getError() {
-        int i = 1 / 0;
-        logger.info("i:{}" , i);
+
+    @Transactional
+    public void upDateUserInfo(User user) {
+        userMapper.upDateUserInfo(user);
+//        测试异常后数据是否回滚
+//        getError();
     }
+
+
 }

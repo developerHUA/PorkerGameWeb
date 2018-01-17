@@ -2,19 +2,25 @@ package com.huarenkeji.porkergame.bean;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
 
 public class User {
     private Integer userId;
-    private String username;
-    private String password;
+    private String nickname;
     private Date createDate;
     private int diamond;
     private String phoneNumber;
     private String invitationCode;
     private String openId;
-    private String headImageUrl;
+    private String headimgurl;
+    private Date lastLoginTime;
+    private String token;
+    private String unionid;
+    private int sex;
 
     public String getOpenId() {
         return openId;
@@ -24,12 +30,16 @@ public class User {
         this.openId = openId;
     }
 
-    public String getHeadImageUrl() {
-        return headImageUrl;
+    public String getHeadimgurl() {
+        return headimgurl;
     }
 
-    public void setHeadImageUrl(String headImageUrl) {
-        this.headImageUrl = headImageUrl;
+    public void setHeadimgurl(String headimgurl) {
+        this.headimgurl = headimgurl;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public int getDiamond() {
@@ -61,42 +71,70 @@ public class User {
     }
 
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public Date getCreateDate() {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        logger.debug("getCreateDate "+createDate.getTime());
         return createDate;
     }
 
     public void setCreateDate(Date createDate) {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        logger.debug("setCreateDate "+createDate.getTime());
         this.createDate = createDate;
     }
 
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", nickname ='" + nickname + '\'' +
                 ", createDate=" + createDate +
                 ", diamond=" + diamond +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", invitationCode='" + invitationCode + '\'' +
                 ", openId='" + openId + '\'' +
-                ", headImageUrl='" + headImageUrl + '\'' +
+                ", headimgurl='" + headimgurl + '\'' +
                 '}';
+    }
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 }
