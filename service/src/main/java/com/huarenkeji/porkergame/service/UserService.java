@@ -21,9 +21,12 @@ public class UserService {
 
     @Transactional
     public User loadUserByOpenId(String openId) {
-        return userMapper.loadUserByUsername(openId);
+        return userMapper.loadUserByUserOpenId(openId);
     }
-
+    @Transactional
+    public User loginInfo(String openId) {
+        return userMapper.loginInfo(openId);
+    }
     @Transactional
     public void saveUser(User user) {
         userMapper.saveUser(user);

@@ -2,12 +2,10 @@ package com.huarenkeji.porkergame.bean;
 
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Date;
-
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private Integer userId;
     private String nickname;
@@ -81,14 +79,10 @@ public class User {
 
 
     public Date getCreateDate() {
-        Logger logger = LoggerFactory.getLogger(this.getClass());
-        logger.debug("getCreateDate "+createDate.getTime());
         return createDate;
     }
 
     public void setCreateDate(Date createDate) {
-        Logger logger = LoggerFactory.getLogger(this.getClass());
-        logger.debug("setCreateDate "+createDate.getTime());
         this.createDate = createDate;
     }
 

@@ -13,7 +13,11 @@ public interface UserMapper {
             @Result(column = "invitationCode", property = "invitationCode"),
             @Result(column = "token", property = "token")
     })
-    User loadUserByUsername(@Param("openId") String openId);
+    User loadUserByUserOpenId(@Param("openId") String openId);
+
+    @Select(value = "select userId,headimgurl,token,nickname,sex,diamond from users where openId = #{openId}")
+    User loginInfo(@Param("openId") String openId);
+
 
     @Insert(value = "insert into users (nickname, sex,createDate,diamond,invitationCode,lastLoginTime,openId,headimgurl,token,unionid)" +
             " value(#{nickname},#{sex},#{createDate},#{diamond},#{invitationCode}," +

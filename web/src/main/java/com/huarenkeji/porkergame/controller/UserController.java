@@ -23,18 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/home", method = RequestMethod.GET)
-    @PreAuthorize("isAuthenticated()")// isAuthenticated 如果用户不是匿名用户就返回true
-    public String showHomePage() {
-        try {
-//            userService.loadUserByUsername("admin");
-            logger.info("load user ");
-        } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(), e);
-        }
 
-        return "/index/index";
-    }
 
     @RequestMapping(value = "/wxLogin", method = RequestMethod.POST)
     @ResponseBody
@@ -47,15 +36,13 @@ public class UserController {
 
         if (userService.loadUserByOpenId(user.getOpenId()) != null) {
             userService.upDateUserInfo(user);
-            logger.debug("-----upDateUserInfo");
         } else {
             user.setCreateDate(currentDate);
             user.setDiamond(8);
             userService.saveUser(user);
-            logger.debug("-----saveUser");
         }
 
-        return Result.getSuccessJson(userService.loadUserByOpenId(user.getOpenId()));
+        return Result.getSuccessJson(userService.loginInfo(user.getOpenId()));
     }
 
 }
