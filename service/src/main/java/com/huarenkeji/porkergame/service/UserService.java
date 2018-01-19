@@ -23,6 +23,13 @@ public class UserService {
     public User loadUserByOpenId(String openId) {
         return userMapper.loadUserByUserOpenId(openId);
     }
+
+
+    @Transactional
+    public User loadUserByUserId(int userId) {
+        return userMapper.loadUserByUserId(userId);
+    }
+
     @Transactional
     public User loginInfo(String openId) {
         return userMapper.loginInfo(openId);

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/porkerGame/socket", configurator = HttpSessionConfigurator.class)
+@ServerEndpoint(value = "/porkerGame/socket/{roomNumber}/{token}", configurator = HttpSessionConfigurator.class)
 public class PorkerGameSocket {
     private static final Logger logger = LoggerFactory.getLogger(PorkerGameSocket.class);
     private static CopyOnWriteArraySet<PorkerGameSocket> webSocketSet = new CopyOnWriteArraySet<>();
@@ -21,12 +22,13 @@ public class PorkerGameSocket {
     private Session session;
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig config) {
-        logger.debug("onOpen ---");
+    public void onOpen(@PathParam(value = "roomNumber") String roomNumber, @PathParam(value = "token") String token,
+                       Session session, EndpointConfig config) {
+        logger.debug("onOpen --- token = "+token);
         this.session = session;
+
 //        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 //        String roomNumber = (String) httpSession.getAttribute("roomNumber");
-        String roomNumber = "001";
         logger.debug("onOpen ---" + roomNumber);
 
 

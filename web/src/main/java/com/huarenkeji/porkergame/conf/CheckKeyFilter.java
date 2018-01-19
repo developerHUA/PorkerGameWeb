@@ -50,7 +50,7 @@ public class CheckKeyFilter implements Filter {
                 chain.doFilter(bodyRequest, response);
                 return true;
             } else {
-                String returnJson = JSON.toJSONString(Result.getInValidKeyJson());
+                String returnJson = JSON.toJSONString(Result.getInValidKeyResult());
                 response.getWriter().append(returnJson).append("----").append(curKey);
                 return false;
             }

@@ -53,22 +53,43 @@ public class Result implements Serializable {
         this.result = result;
     }
 
-    public static Result getSuccessJson() {
-        return getSuccessJson(null);
+    /**
+     *  返回成功结果的code 和 信息
+     */
+    public static Result getSuccessResult() {
+        return getSuccessResult(null);
     }
 
-
-    public static Result getSuccessJson(Object result) {
+    /**
+     *  返回成功结果的code 信息 数据
+     */
+    public static Result getSuccessResult(Object result) {
         Result baseResult = new Result(NetConfig.SUCCESS_CODE, NetConfig.SUCCESS_MESSAGE, NetConfig.SUCCESS_ERROR);
         baseResult.setResult(result);
         return baseResult;
 
     }
 
-
-    public static Result getInValidKeyJson() {
+    /**
+     *  返回无效的key code 信息 数据
+     */
+    public static Result getInValidKeyResult() {
         return new Result(NetConfig.KEY_INVALID_CODE,NetConfig.KEY_INVALID_MESSAGE,NetConfig.KEY_INVALID_ERROR);
     }
 
+    /**
+     *  返回无效的token code 信息 数据
+     */
+    public static Result getInValidTokenResult() {
+        return new Result(NetConfig.TOKEN_INVALID_CODE,NetConfig.TOKEN_INVALID_MESSAGE,NetConfig.TOKEN_INVALID_ERROR);
+    }
+
+
+    /**
+     *  返回未找到搜索结果 code 信息 数据
+     */
+    public static Result getNoSearchResult() {
+        return new Result(NetConfig.NO_SEARCH_CODE,NetConfig.NO_SEARCH_MESSAGE,NetConfig.NO_SEARCH_ERROR);
+    }
 
 }
