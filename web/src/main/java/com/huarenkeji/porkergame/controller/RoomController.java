@@ -22,8 +22,8 @@ import java.util.List;
 @RequestMapping(value = "/room")
 public class RoomController {
     private static final Logger logger = LoggerFactory.getLogger(RoomController.class);
-    private List<Room> onLineRooms = new ArrayList<>(); // 当前在使用的房间
-    private List<Room> offLineRooms = new ArrayList<>(); // 已经不再使用的房间
+    private static List<Room> onLineRooms = new ArrayList<>(); // 当前在使用的房间
+    private static List<Room> offLineRooms = new ArrayList<>(); // 已经不再使用的房间
     @Autowired
     UserService userService;
 
@@ -35,9 +35,9 @@ public class RoomController {
             if (offLineRooms.size() == 0) {
                 Room room = new Room();
                 if (onLineRooms.size() == 0) {
-                    room.setRoomNumber("100");
+                    room.setRoomNumber(100);
                 } else {
-                    room.setRoomNumber(onLineRooms.size() + offLineRooms.size() + 100 + "");
+                    room.setRoomNumber(onLineRooms.size() + offLineRooms.size() + 100);
                 }
                 onLineRooms.add(room);
             } else {
@@ -65,7 +65,7 @@ public class RoomController {
         User user = userService.loadUserByUserId(params.getParams().getUserId());
         if (user.getToken().equals(params.getParams().getToken())) {
             for (Room onLineRoom : onLineRooms) {
-                if (onLineRoom.getRoomNumber().equals(room.getRoomNumber())) {
+                if (onLineRoom.getRoomNumber() == room.getRoomNumber()) {
                     onLineRoom.getUsers().add(user);
                     logger.debug(user.getUserId() + " 加入房间：" + onLineRoom.getRoomNumber());
                     return Result.getSuccessResult(onLineRoom);
@@ -77,12 +77,56 @@ public class RoomController {
         return Result.getNoSearchResult();
     }
 
-    @RequestMapping(value = "/exit", method = RequestMethod.POST)
+    @RequestMapping(value = "/exitRoom", method = RequestMethod.POST)
     @ResponseBody
-    public void exitRoom(@RequestBody Params<Room> params) {
+    public Result exitRoom(@RequestBody Params<Room> params) {
 
+        int userId = params.getParams().getUserId();
+
+        User user = userService.loadUserByUserId(userId);
+        if (user.getToken().equals(params.getParams().getToken())) {
+            int roomNumber = params.getParams().getRoomNumber();
+            for (int j = 0; j < onLineRooms.size(); j++) {
+                if (onLineRooms.get(j).getRoomNumber() == roomNumber) {
+
+                    logger.debug("当前房间剩余用户" + onLineRooms.get(j).getUsers().size());
+                    for (int i = 0; i < onLineRooms.get(j).getUsers().size(); i++) {
+                        if (onLineRooms.get(j).getUsers().get(i).getUserId() == userId) {
+                            onLineRooms.get(j).getUsers().remove(i);
+                            break;
+                        }
+                    }
+                    logger.debug("当前房间剩余用户" + onLineRooms.get(j).getUsers().size());
+
+                    if (onLineRooms.get(j).getUsers().size() == 0) {
+                        offLineRooms.add(onLineRooms.get(j));
+                        onLineRooms.remove(j);
+                    }
+
+                    return Result.getSuccessResult();
+                }
+            }
+
+
+        } else {
+            return Result.getInValidTokenResult();
+        }
+
+        return Result.getNoRoomResult();
     }
 
+
+    public static Room getRoom(int roomNumber) {
+
+        for (Room room : onLineRooms) {
+            if(roomNumber == room.getRoomNumber()) {
+                return room;
+            }
+        }
+
+        return null;
+
+    }
 
 
 }

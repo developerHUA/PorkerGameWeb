@@ -92,4 +92,12 @@ public class Result implements Serializable {
         return new Result(NetConfig.NO_SEARCH_CODE,NetConfig.NO_SEARCH_MESSAGE,NetConfig.NO_SEARCH_ERROR);
     }
 
+
+    /**
+     *  返回未找到对方房间结果 code 信息 数据
+     */
+    public static Result getNoRoomResult() {
+        return new Result(NetConfig.NO_ROOM_CODE,NetConfig.NO_ROOM_MESSAGE,NetConfig.NO_ROOM_ERROR);
+    }
+
 }
