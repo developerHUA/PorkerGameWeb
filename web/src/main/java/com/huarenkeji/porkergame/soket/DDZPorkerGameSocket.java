@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ServerEndpoint(value = "/porkerGame/socket/{roomNumber}/{token}", configurator = HttpSessionConfigurator.class)
+@ServerEndpoint(value = "/porkerGame/socket/{roomNumber}/{token}/{userId}", configurator = HttpSessionConfigurator.class)
 public class DDZPorkerGameSocket {
     private static final Logger logger = LoggerFactory.getLogger(DDZPorkerGameSocket.class);
     private static Map<Integer, List<DDZPorkerGameSocket>> allSocket = new HashMap<>();
