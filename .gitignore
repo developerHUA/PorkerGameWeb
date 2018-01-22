@@ -20,6 +20,27 @@
 *.tar.gz
 *.rar
 
+# IntelliJ project files
+*.iml
+*.ipr
+*.iws
+.idea/
+out
+gen
+
+# ------- 过滤编译工具 -------- #
+# External tool builders
+.externalToolBuilders/
+
+# ------ 过滤Maven文件 ------- #
+#Maven Files#
+*/target/
+target/
+pom.xml.*
+*/pom.xml.*
+release.properties
+
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
