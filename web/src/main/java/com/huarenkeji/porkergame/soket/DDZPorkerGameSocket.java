@@ -8,6 +8,7 @@ import com.huarenkeji.porkergame.bean.*;
 import com.huarenkeji.porkergame.config.SocketConfig;
 import com.huarenkeji.porkergame.controller.RoomController;
 import com.huarenkeji.porkergame.service.UserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +107,7 @@ public class DDZPorkerGameSocket {
                     processLandlord(roomSocket);
                     break;
                 case SocketConfig.SURPLUS_ONE:
-                    processSurplus(roomSocket, SocketConfig.SURPLUS_TWO);
+                    processSurplus(roomSocket, SocketConfig.SURPLUS_ONE);
                     break;
                 case SocketConfig.SURPLUS_TWO:
                     processSurplus(roomSocket, SocketConfig.SURPLUS_TWO);
@@ -183,12 +185,13 @@ public class DDZPorkerGameSocket {
         JSONArray jsonArray = jsonObject.getJSONArray(SocketConfig.PORKER_ARRAY_KEY);
         String arrayJson = JSONObject.toJSONString(jsonArray, SerializerFeature.WriteClassName);//将array数组转换成字符串
         playPorker = JSON.parseArray(arrayJson, DDZPorker.class);
+        // typeArr[0] 为牌的类型 typeArr[1] 为牌的大小
         int[] typeArr = DDZLogicBean.getPorkerType(playPorker);
         String sendJson;
-        if (typeArr[0] == DDZLogicBean.UNKNOWN) {
+        if (typeArr[0] == DDZLogicBean.UNKNOWN) { //用户出的牌型不正确
             playPorker.clear();
             sendJson = JSON.toJSONString(SocketBean.messageType(SocketConfig.UNKNOWN_PORKER, user.getUserId()));
-            sendRoom(roomSocket, sendJson);
+            sendSingle(sendJson, session);
             return;
         }
 
@@ -217,10 +220,11 @@ public class DDZPorkerGameSocket {
 
         if (DDZLogicBean.comparablePorker(playPorker, lastPorker)) {
             sendJson = JSON.toJSONString(SocketBean.messageParams(SocketConfig.PLAY_PORKER, user.getUserId(), playPorker));
+            sendRoom(roomSocket, sendJson);
         } else {
             sendJson = JSON.toJSONString(SocketBean.messageType(SocketConfig.UNKNOWN_PORKER, user.getUserId()));
+            sendSingle(sendJson, session);
         }
-        sendRoom(roomSocket, sendJson);
 
 
     }
