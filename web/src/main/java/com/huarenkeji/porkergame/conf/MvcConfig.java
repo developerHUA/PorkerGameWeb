@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @EnableScheduling
-@ComponentScan(basePackages = {"com.huarenkeji.porkergame.web.controller","com.aitongyi.web.service"})
+@ComponentScan(basePackages = {"com.huarenkeji.porkergame.controller","com.huarenkeji.porkergame.service"})
 @MapperScan("com.huarenkeji.porkergame.dao.mapper")
 public class MvcConfig extends WebMvcConfigurerAdapter {
 

@@ -1,12 +1,18 @@
 package com.huarenkeji.porkergame.bean;
 
+import org.springframework.context.annotation.Bean;
+
 import java.util.Date;
+
 
 public class User {
     private Integer userId;
     private String userName;
     private String password;
     private Date createDate;
+    private int diamond;
+    private String phoneNumber;
+    private String invitationCode;
 
 
     public Integer getUserId() {
