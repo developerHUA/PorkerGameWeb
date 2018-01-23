@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Room extends BaseParams{
 
-    public static final int D_D_Z_THREE_TYPE = 1; //三人斗地主类型
-    public static final int D_D_Z_FOUR_TYPE = 2; //四人人斗地主类型
+    public static final int D_D_Z_THREE_TYPE = 3; //三人斗地主类型
+    public static final int D_D_Z_FOUR_TYPE = 4; //四人人斗地主类型
 
 
 
@@ -18,17 +18,17 @@ public class Room extends BaseParams{
 
     private int roomNumber; //房间号
     private List<User> users; //房间内用户
-    private int type; // 房间类型 目前只有斗地主类型
-    private int abandonType; //去掉牌的类型
+    private int playType; // 房间类型 目前只有斗地主类型
+    private int ruleType; //去掉牌的类型
 
 
 
-    public int getType() {
-        return type;
+    public int getPlayType() {
+        return playType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setPlayType(int playType) {
+        this.playType = playType;
     }
 
 

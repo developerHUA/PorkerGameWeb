@@ -19,13 +19,13 @@
 <c:url value="/login" var="loginUrl"/>
 <form action="${loginUrl}" method="post" id="loginForm">
     <div>
-        <input type="text" name="username" class="username" placeholder="用户名" autocomplete="off"/>
+        <input playType="text" name="username" class="username" placeholder="用户名" autocomplete="off"/>
     </div>
     <div>
-        <input type="password" name="password" class="password" placeholder="密码" oncontextmenu="return false" onpaste="return false"/>
+        <input playType="password" name="password" class="password" placeholder="密码" oncontextmenu="return false" onpaste="return false"/>
     </div>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <button id="submit" type="submit">登录</button>
+    <input playType="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <button id="submit" playType="submit">登录</button>
 </form>
 
 
