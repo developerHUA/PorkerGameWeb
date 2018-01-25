@@ -21,7 +21,13 @@ public class Room extends BaseParams{
     private int playType; // 房间类型 目前只有斗地主类型
     private int ruleType; //去掉牌的类型
 
+    public int getRuleType() {
+        return ruleType;
+    }
 
+    public void setRuleType(int ruleType) {
+        this.ruleType = ruleType;
+    }
 
     public int getPlayType() {
         return playType;

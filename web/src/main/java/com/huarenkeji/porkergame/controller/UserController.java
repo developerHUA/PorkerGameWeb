@@ -29,11 +29,11 @@ public class UserController {
     public Result saveUser(@RequestBody Params<User> params) {
         User user = params.getParams();
         Date currentDate = new Date();
-        String token = MD5.getMessageDigest(String.valueOf(currentDate.getTime()).getBytes());
+        String token = MD5.md5(String.valueOf(currentDate.getTime()));
         user.setLastLoginTime(currentDate);
         user.setToken(token);
 
-        if (userService.loadUserByOpenId(user.getOpenId()) != null) {
+        if (userService.loadUserByOpenId(user.getOpenid()) != null) {
             userService.upDateUserInfo(user);
         } else {
             user.setCreateDate(currentDate);
@@ -41,7 +41,7 @@ public class UserController {
             userService.saveUser(user);
         }
 
-        return Result.getSuccessResult(userService.loginInfo(user.getOpenId()));
+        return Result.getSuccessResult(userService.loginInfo(user.getOpenid()));
     }
 
 }

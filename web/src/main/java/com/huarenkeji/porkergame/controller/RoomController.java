@@ -29,11 +29,11 @@ public class RoomController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public Result createRoom(@RequestBody Params<BaseParams> params) {
+    public Result createRoom(@RequestBody Params<Room> params) {
         User user = userService.loadUserByUserId(params.getParams().getUserId());
+        Room room = params.getParams();
         if (user.getToken().equals(params.getParams().getToken())) {
             if (offLineRooms.size() == 0) {
-                Room room = new Room();
                 if (onLineRooms.size() == 0) {
                     room.setRoomNumber(100);
                 } else {
@@ -41,14 +41,15 @@ public class RoomController {
                 }
                 onLineRooms.add(room);
             } else {
-                onLineRooms.add(offLineRooms.get(0));
+                room.setRoomNumber(offLineRooms.get(0).getRoomNumber());
+                onLineRooms.add(room);
                 offLineRooms.remove(0);
             }
             Room onLineRoom = onLineRooms.get(onLineRooms.size() - 1);
             List<User> users = new ArrayList<>();
             users.add(user);
             onLineRoom.setUsers(users);
-            logger.debug(user.getUserId() + " 创建了一个房间：" + onLineRoom.getRoomNumber() +
+            logger.debug(user.getNickname() + " 创建了一个房间：" + onLineRoom.getRoomNumber() +
                     "当前房间数：" + onLineRooms.size());
             return Result.getSuccessResult(onLineRoom);
         } else {

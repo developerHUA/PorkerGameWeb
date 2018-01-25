@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `userId` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `diamond` int(11) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `users` (
   `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `sex` int(11) DEFAULT NULL,
   `unionid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`userId`)
+  PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

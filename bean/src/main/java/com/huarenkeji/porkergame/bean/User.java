@@ -13,19 +13,19 @@ public class User {
     private int diamond;
     private String phoneNumber;
     private String invitationCode;
-    private String openId;
+    private String openid;
     private String headimgurl;
     private Date lastLoginTime;
     private String token;
     private String unionid;
     private int sex;
 
-    public String getOpenId() {
-        return openId;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getHeadimgurl() {
@@ -94,17 +94,35 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "userId=" + userId +
+//                ", nickname ='" + nickname + '\'' +
+//                ", createDate=" + createDate +
+//                ", diamond=" + diamond +
+//                ", phoneNumber='" + phoneNumber + '\'' +
+//                ", invitationCode='" + invitationCode + '\'' +
+//                ", openid='" + openid + '\'' +
+//                ", headimgurl='" + headimgurl + '\'' +
+//                '}';
+//    }
+
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", nickname ='" + nickname + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", createDate=" + createDate +
                 ", diamond=" + diamond +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", invitationCode='" + invitationCode + '\'' +
-                ", openId='" + openId + '\'' +
+                ", openid='" + openid + '\'' +
                 ", headimgurl='" + headimgurl + '\'' +
+                ", lastLoginTime=" + lastLoginTime +
+                ", token='" + token + '\'' +
+                ", unionid='" + unionid + '\'' +
+                ", sex=" + sex +
                 '}';
     }
 

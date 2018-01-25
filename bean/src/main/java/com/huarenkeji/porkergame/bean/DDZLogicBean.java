@@ -21,13 +21,19 @@ public class DDZLogicBean {
     private static final int THREE_BOMB_FOUR = 14; // 三炸四张
     private static final int KING_BOMB = 15; // 王炸类型
 
+
+    /**
+     * 获取牌的类型 牌的大小(用来比较的) 牌的长度
+     *
+     * @return index 0 = 牌的类型 , index 1 = 牌的大小 , index 2 = 牌的长度
+     */
     public static int[] getPorkerType(List<DDZPorker> porkers) {
 
         int type = UNKNOWN;
         int size = 0;
 
         if (porkers == null || porkers.size() == 0) {
-            return new int[]{type, size};
+            return new int[]{type, size, 0};
         }
 
         switch (porkers.size()) {
@@ -88,7 +94,7 @@ public class DDZLogicBean {
 
         }
 
-        return new int[]{type, size};
+        return new int[]{type, size, porkers.size()};
 
     }
 
@@ -127,11 +133,13 @@ public class DDZLogicBean {
             case DOUBLE:
             case THREE_AND_ONE:
             case THREE_NO_AND:
+            case FOUR_AND_TWO:
+                isBig = currentType[0] == lastType[0] && currentType[1] > lastType[1];
+                break;
             case SHUN_ZI:
             case AIRCRAFT:
-            case FOUR_AND_TWO:
             case DOUBLE_SHUN_ZI:
-                isBig = currentType[0] == lastType[0] && currentType[1] > lastType[1];
+                isBig = currentType[2] == lastType[2] && currentType[0] == lastType[0] && currentType[1] > lastType[1];
                 break;
             case THREE_BOMB:
                 isBig = currentType[0] > THREE_BOMB;
@@ -281,96 +289,6 @@ public class DDZLogicBean {
 
     }
 
-    /**
-     * 牌是否为飞机
-     */
-    public static boolean isAircraft2(List<DDZPorker> porkers) {
-
-        boolean isAircraftNoAnd = true; //是否为飞机不带
-
-        for (int i = 0; i < porkers.size(); i += 3) {
-            if (i + 2 >= porkers.size()) {
-                isAircraftNoAnd = false;
-                break;
-            }
-
-            if (i + 5 >= porkers.size()) {
-                continue;
-
-            }
-
-            if (porkers.get(i).porkerSize == porkers.get(i + 1).porkerSize && porkers.get(i).porkerSize == porkers.get(i + 2).porkerSize
-                    && porkers.get(i).porkerSize - porkers.get(i + 5).porkerSize == 1) {
-                continue;
-            }
-
-            isAircraftNoAnd = false;
-
-        }
-
-
-        if (isAircraftNoAnd) {
-            return true;
-        }
-
-
-        // 飞机有附带的牌
-
-        for (int i = 0; i < porkers.size(); i++) {
-            if (i + 2 >= porkers.size()) {
-                return false;
-            }
-
-
-            if (porkers.get(i).porkerSize == porkers.get(i + 1).porkerSize && porkers.get(i).porkerSize == porkers.get(i + 2).porkerSize) {
-
-                int aircraftCount = 1;
-                for (int j = i; j < porkers.size(); j += 3) {
-
-                    if (j + 5 >= porkers.size()) {
-                        if (aircraftCount == 1 || porkers.size() != aircraftCount * 3 + aircraftCount) {
-                            return false;
-                        }
-
-
-                        continue;
-                    }
-
-                    DDZPorker dd1 = porkers.get(j);
-                    DDZPorker dd2 = porkers.get(j + 1);
-                    DDZPorker dd3 = porkers.get(j + 2);
-                    DDZPorker dd4 = porkers.get(j + 3);
-                    DDZPorker dd5 = porkers.get(j + 4);
-                    DDZPorker dd6 = porkers.get(j + 5);
-
-
-                    if (dd1.porkerSize == dd2.porkerSize &&
-                            dd1.porkerSize == dd3.porkerSize &&
-                            dd1.porkerSize - porkers.get(j + 3).porkerSize == 1 &&
-                            dd1.porkerSize - dd4.porkerSize == 1 && dd4.porkerSize == dd5.porkerSize && dd4.porkerSize == dd6.porkerSize) {
-
-                        aircraftCount++;
-
-                        continue;
-                    } else if (aircraftCount != 1 && porkers.size() == aircraftCount * 3 + aircraftCount) {
-                        continue;
-                    }
-
-                    return false;
-                }
-
-
-                break;
-
-            }
-
-
-        }
-
-
-        return true;
-
-    }
 
     /**
      * 牌是否为连队

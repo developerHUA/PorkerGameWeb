@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @EnableScheduling
-@ComponentScan(basePackages = {"com.huarenkeji.porkergame.controller","com.huarenkeji.porkergame.service"})
+@ComponentScan(basePackages = {"com.huarenkeji.porkergame.controller","com.huarenkeji.porkergame.service","com.huarenkeji.porkergame.socket"})
 @MapperScan("com.huarenkeji.porkergame.mapper")
 public class MvcConfig extends WebMvcConfigurerAdapter {
 

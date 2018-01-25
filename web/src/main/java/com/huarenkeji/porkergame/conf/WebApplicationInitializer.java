@@ -1,6 +1,8 @@
 package com.huarenkeji.porkergame.conf;
 
 
+import com.huarenkeji.porkergame.socket.WebSocketConfigurator;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
@@ -12,7 +14,7 @@ public class WebApplicationInitializer extends AbstractAnnotationConfigDispatche
      */
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { WebConfig.class, DatabaseConfig.class, SecurityConfig.class};
+        return new Class[] { WebConfig.class, DatabaseConfig.class, SecurityConfig.class, WebSocketConfigurator.class};
     }
     @Override
     protected Class<?>[] getServletConfigClasses() {

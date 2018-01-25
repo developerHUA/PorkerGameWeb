@@ -5,24 +5,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SocketBean {
 
-    private int messageType;
-    private int userId;
+    private int type; //消息类型
+    private int uid; // 用户id
     private Object params;
 
-    public int getMessageType() {
-        return messageType;
+    public int getType() {
+        return type;
     }
 
-    public void setMessageType(int messageType) {
-        this.messageType = messageType;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUid() {
+        return uid;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public Object getParams() {
@@ -38,8 +38,8 @@ public class SocketBean {
     public static SocketBean messageType(int messageType,int userId) {
 
         SocketBean socketBean = new SocketBean();
-        socketBean.setMessageType(messageType);
-        socketBean.setUserId(userId);
+        socketBean.setType(messageType);
+        socketBean.setUid(userId);
         return socketBean;
     }
 

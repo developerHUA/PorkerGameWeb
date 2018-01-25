@@ -1,9 +1,11 @@
-package com.huarenkeji.porkergame.soket;
+package com.huarenkeji.porkergame.socket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.huarenkeji.porkergame.bean.*;
 import com.huarenkeji.porkergame.config.SocketConfig;
 import com.huarenkeji.porkergame.controller.RoomController;
@@ -12,6 +14,7 @@ import com.huarenkeji.porkergame.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -23,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@Component
 @ServerEndpoint(value = "/porkerGame/socket/{roomNumber}/{token}/{userId}", configurator = HttpSessionConfigurator.class)
 public class DDZPorkerGameSocket {
     private static final Logger logger = LoggerFactory.getLogger(DDZPorkerGameSocket.class);
@@ -44,12 +49,16 @@ public class DDZPorkerGameSocket {
                        @PathParam(value = "userId") int userId, @PathParam(value = "token") String token,
                        Session session, EndpointConfig config) {
         this.session = session;
+
+        logger.debug("userService = " + userService);
+
         user = userService.loadUserByUserId(userId);
-        if (user == null || user.getToken().equals(token)) {
+        if (user == null || !user.getToken().equals(token)) {
+            logger.debug("user = " + user);
+            logger.debug("token = " + token);
             user = null;
             return;
         }
-
 
 //        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 //        String roomNumber = (String) httpSession.getAttribute("roomNumber");
@@ -57,6 +66,7 @@ public class DDZPorkerGameSocket {
         roomConfig = RoomController.getRoom(roomNumber);
         if (roomConfig == null) {
             user = null;
+            logger.debug("roomConfig = null");
             return;
         }
 
@@ -72,6 +82,9 @@ public class DDZPorkerGameSocket {
             processJoin(roomSocket);
         }
 
+
+        logger.debug("有人加入房间：" + user.getNickname());
+
     }
 
 
@@ -85,7 +98,8 @@ public class DDZPorkerGameSocket {
 
         List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomConfig.getRoomNumber());
         if (user != null && roomSocket != null && roomSocket.size() > 0) {
-            int type = (int) JSON.parse(SocketConfig.MESSAGE_TYPE_KEY);
+            JsonElement jsonElement = new JsonParser().parse(message);
+            int type =  jsonElement.getAsJsonObject().get(SocketConfig.MESSAGE_TYPE_KEY).getAsInt();
             switch (type) {
                 case SocketConfig.READY:
                     processReady(roomSocket);
@@ -134,14 +148,17 @@ public class DDZPorkerGameSocket {
     private void processReady(List<DDZPorkerGameSocket> roomSocket) {
         isReady = true;
         currentUserPorker.clear();
-        for (DDZPorkerGameSocket socket : roomSocket) {
-            if (!socket.isReady) {
-                sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
-                return;
+//        if (roomSocket.size() == roomConfig.getPlayType()) {
+            for (DDZPorkerGameSocket socket : roomSocket) {
+                if (!socket.isReady) {
+                    sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
+                    return;
+                }
             }
-        }
-
-        processSendPoker(roomSocket);
+            processSendPoker(roomSocket);
+//        } else {
+//            sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
+//        }
 
     }
 
@@ -166,7 +183,7 @@ public class DDZPorkerGameSocket {
 
         for (DDZPorkerGameSocket socket : roomSocket) {
             SocketBean socketBean = new SocketBean();
-            socketBean.setMessageType(SocketConfig.DEAL_PORKER);
+            socketBean.setType(SocketConfig.DEAL_PORKER);
             socketBean.setParams(socket.currentUserPorker);
             sendSingle(JSON.toJSONString(socketBean), socket.session);
         }
