@@ -11,9 +11,10 @@ public class Room extends BaseParams{
 
 
 
-    public static final int ABANDON_DOUBLE_TWO = 1; // 去掉两个2
-    public static final int ABANDON_DOUBLE_THREE = 2; // 去掉两个3
-    public static final int ABANDON_ONE_AND_TWEO = 3; // 去掉一个2一个A
+    public static final int NO_REMOVE = 0; //不去牌
+    public static final int REMOVE_DOUBLE_TWO = 1; // 去掉两个2
+    public static final int REMOVE_DOUBLE_THREE = 2; // 去掉两个3
+    public static final int REMOVE_ONE_AND_TWO = 3; // 去掉一个2一个A
 
 
     private int roomNumber; //房间号

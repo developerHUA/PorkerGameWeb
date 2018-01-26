@@ -31,18 +31,17 @@ public class DDZPorker extends Porker implements Comparable<DDZPorker> {
             porker.porkerSize = porkerSize;
             porkerSize++;
             allPoker.add(porker);
-            id++;
             if (i % 13 == 0) {
-                id = 0;
                 type++;
             }
+            id++;
         }
         DDZPorker porker = new DDZPorker();
-        porker.porkerId = 0;
+        porker.porkerId = 52;
         porker.porkerType = SMALL_KING;
         porker.porkerSize = 13;
         DDZPorker porker2 = new DDZPorker();
-        porker2.porkerId = 0;
+        porker2.porkerId = 53;
         porker2.porkerType = BIG_KING;
         porker2.porkerSize = 14;
         allPoker.add(porker);
@@ -51,28 +50,32 @@ public class DDZPorker extends Porker implements Comparable<DDZPorker> {
         return allPoker;
     }
 
-    public static List<DDZPorker> getShuffleAllPoker() {
-        List<DDZPorker> allPoker = getAllPoker();
-        Collections.shuffle(allPoker);
-        return allPoker;
+
+    public static List<DDZPorker> getMovePoker(int moveType) {
+        return getShufflePoker(moveType);
     }
 
 
-    public static List<DDZPorker> getMoveShufflePoker() {
-        return getMoveShufflePoker(3,2);
-    }
-
-
-    public static List<DDZPorker> getMoveShufflePoker(int... args) {
+    public static List<DDZPorker> getShufflePoker(int moveType) {
         List<DDZPorker> allPoker = getAllPoker();
-        for (int i = 0; i < args.length; i++) {
-            allPoker.remove(args[i]);
+        switch (moveType) {
+            case Room.REMOVE_DOUBLE_THREE:
+                allPoker.remove(allPoker.size()-1);
+                allPoker.remove(allPoker.size()-1);
+                break;
+            case Room.REMOVE_DOUBLE_TWO:
+                allPoker.remove(3);
+                allPoker.remove(2);
+                break;
+            case Room.REMOVE_ONE_AND_TWO:
+                allPoker.remove(6);
+                allPoker.remove(5);
+                break;
         }
+
         Collections.shuffle(allPoker);
         return allPoker;
     }
-
-
 
 
     @Override
@@ -81,7 +84,7 @@ public class DDZPorker extends Porker implements Comparable<DDZPorker> {
         int temp1 = ddzPorker.porkerSize;
         int sort = temp1 - temp2;
         return sort == 0 ?
-                this.porkerType - ddzPorker.porkerType : sort;
+                ddzPorker.porkerType - this.porkerType : sort;
     }
 
 

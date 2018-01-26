@@ -23,6 +23,6 @@ public interface SocketConfig {
     String ROOM_NUMBER_KEY = "rn"; //房间号
     String USER_ID_KEY = "uid"; //用户id
     String MESSAGE_TYPE_KEY = "type"; //消息类型
-    String PORKER_ARRAY_KEY = "porkerArray";
+    String PORKER_ARRAY_KEY = "params";
 
 }

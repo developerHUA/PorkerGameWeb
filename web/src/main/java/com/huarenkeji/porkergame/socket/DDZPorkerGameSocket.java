@@ -3,7 +3,6 @@ package com.huarenkeji.porkergame.socket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.huarenkeji.porkergame.bean.*;
@@ -38,7 +37,7 @@ public class DDZPorkerGameSocket {
     private List<DDZPorker> currentUserPorker = new ArrayList<>();
     private Room roomConfig;
     private List<DDZPorker> playPorker = new ArrayList<>();
-    private List<DDZPorker> LandlordPorker = new ArrayList<>();
+    private List<DDZPorker> landlordPorker = new ArrayList<>();
 
 
     @Autowired
@@ -99,7 +98,7 @@ public class DDZPorkerGameSocket {
         List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomConfig.getRoomNumber());
         if (user != null && roomSocket != null && roomSocket.size() > 0) {
             JsonElement jsonElement = new JsonParser().parse(message);
-            int type =  jsonElement.getAsJsonObject().get(SocketConfig.MESSAGE_TYPE_KEY).getAsInt();
+            int type = jsonElement.getAsJsonObject().get(SocketConfig.MESSAGE_TYPE_KEY).getAsInt();
             switch (type) {
                 case SocketConfig.READY:
                     processReady(roomSocket);
@@ -148,17 +147,17 @@ public class DDZPorkerGameSocket {
     private void processReady(List<DDZPorkerGameSocket> roomSocket) {
         isReady = true;
         currentUserPorker.clear();
-//        if (roomSocket.size() == roomConfig.getPlayType()) {
-            for (DDZPorkerGameSocket socket : roomSocket) {
-                if (!socket.isReady) {
-                    sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
-                    return;
-                }
+        if (roomSocket.size() == roomConfig.getPlayType()) {
+        for (DDZPorkerGameSocket socket : roomSocket) {
+            if (!socket.isReady) {
+                sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
+                return;
             }
-            processSendPoker(roomSocket);
-//        } else {
-//            sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
-//        }
+        }
+        processSendPoker(roomSocket);
+        } else {
+            sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
+        }
 
     }
 
@@ -172,11 +171,14 @@ public class DDZPorkerGameSocket {
             return;
 
         }
-        List<DDZPorker> allPorker = DDZPorker.getMoveShufflePoker();
-        int landlordSize = 3; // 地主牌的数量
+        List<DDZPorker> allPorker = DDZPorker.getShufflePoker(roomConfig.getRuleType());
+        int landlordSize = 4; // 地主牌的数量
+        if (roomConfig.getPlayType() == Room.D_D_Z_THREE_TYPE
+                && roomConfig.getRuleType() == Room.NO_REMOVE) {
+            landlordSize = 3;
+        }
 
-
-        for (int i = allPorker.size() - landlordSize - 1; i >= landlordSize; i--) {
+        for (int i = allPorker.size() - 1; i >= landlordSize; i--) {
             roomSocket.get(i % roomSocket.size()).currentUserPorker.add(allPorker.get(i));
             allPorker.remove(i);
         }
@@ -188,7 +190,7 @@ public class DDZPorkerGameSocket {
             sendSingle(JSON.toJSONString(socketBean), socket.session);
         }
 
-        LandlordPorker = allPorker;
+        landlordPorker = allPorker;
 
 
     }
@@ -200,8 +202,7 @@ public class DDZPorkerGameSocket {
     private void processPlayPorker(String message, List<DDZPorkerGameSocket> roomSocket) {
         JSONObject jsonObject = JSON.parseObject(message);
         JSONArray jsonArray = jsonObject.getJSONArray(SocketConfig.PORKER_ARRAY_KEY);
-        String arrayJson = JSONObject.toJSONString(jsonArray, SerializerFeature.WriteClassName);//将array数组转换成字符串
-        playPorker = JSON.parseArray(arrayJson, DDZPorker.class);
+        playPorker = JSON.parseArray(jsonArray.toJSONString(), DDZPorker.class);
         // typeArr[0] 为牌的类型 typeArr[1] 为牌的大小
         int[] typeArr = DDZLogicBean.getPorkerType(playPorker);
         String sendJson;
@@ -267,7 +268,7 @@ public class DDZPorkerGameSocket {
      * 处理用户叫地主
      */
     private void processLandlord(List<DDZPorkerGameSocket> roomSocket) {
-        String json = JSON.toJSONString(SocketBean.messageParams(SocketConfig.LANDLORD, user.getUserId(), LandlordPorker));
+        String json = JSON.toJSONString(SocketBean.messageParams(SocketConfig.LANDLORD, user.getUserId(), landlordPorker));
         sendRoom(roomSocket, json);
     }
 
