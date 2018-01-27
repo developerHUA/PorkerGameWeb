@@ -6,6 +6,7 @@ import com.huarenkeji.porkergame.base.Result;
 import com.huarenkeji.porkergame.bean.Room;
 import com.huarenkeji.porkergame.bean.User;
 import com.huarenkeji.porkergame.service.UserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +41,20 @@ public class RoomController {
                     room.setRoomNumber(onLineRooms.size() + offLineRooms.size() + 100);
                 }
                 onLineRooms.add(room);
+                logger.debug(user.getNickname() + " 创建了一个房间：" + room.getRoomNumber() +
+                        "当前房间数：" + onLineRooms.size());
             } else {
                 room.setRoomNumber(offLineRooms.get(0).getRoomNumber());
                 onLineRooms.add(room);
                 offLineRooms.remove(0);
+                logger.debug(user.getNickname() + " 回收了一个房间：" + room.getRoomNumber() +
+                        "当前房间数：" + onLineRooms.size());
             }
             Room onLineRoom = onLineRooms.get(onLineRooms.size() - 1);
             List<User> users = new ArrayList<>();
             users.add(user);
             onLineRoom.setUsers(users);
-            logger.debug(user.getNickname() + " 创建了一个房间：" + onLineRoom.getRoomNumber() +
-                    "当前房间数：" + onLineRooms.size());
+
             return Result.getSuccessResult(onLineRoom);
         } else {
             return Result.getInValidTokenResult();
@@ -89,15 +93,12 @@ public class RoomController {
             int roomNumber = params.getParams().getRoomNumber();
             for (int j = 0; j < onLineRooms.size(); j++) {
                 if (onLineRooms.get(j).getRoomNumber() == roomNumber) {
-
-                    logger.debug("当前房间剩余用户" + onLineRooms.get(j).getUsers().size());
                     for (int i = 0; i < onLineRooms.get(j).getUsers().size(); i++) {
                         if (onLineRooms.get(j).getUsers().get(i).getUserId() == userId) {
                             onLineRooms.get(j).getUsers().remove(i);
                             break;
                         }
                     }
-                    logger.debug("当前房间剩余用户" + onLineRooms.get(j).getUsers().size());
 
                     if (onLineRooms.get(j).getUsers().size() == 0) {
                         offLineRooms.add(onLineRooms.get(j));
@@ -120,7 +121,7 @@ public class RoomController {
     public static Room getRoom(int roomNumber) {
 
         for (Room room : onLineRooms) {
-            if(roomNumber == room.getRoomNumber()) {
+            if (roomNumber == room.getRoomNumber()) {
                 return room;
             }
         }
@@ -129,5 +130,23 @@ public class RoomController {
 
     }
 
+    public static void exitRoom(int roomNumber, int userId) {
+        for (int i = onLineRooms.size() - 1; i >= 0; i--) {
+            if (roomNumber == onLineRooms.get(i).getRoomNumber()) {
+                Room room = onLineRooms.get(i);
+                List<User> users = room.getUsers();
+                for (int j = users.size() - 1; j > 0; j--) {
+                    if (users.get(j).getUserId() == userId) {
+                        users.remove(j);
+                        if (users.size() == 0) {
+                            onLineRooms.remove(room);
+                            offLineRooms.add(room);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
 
+    }
 }

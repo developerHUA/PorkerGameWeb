@@ -15,7 +15,11 @@ public interface SocketConfig {
     int CANCEL_READY = 9; //取消准备
     int DEAL_PORKER = 10; //发牌
     int UNKNOWN_PORKER = 11; // 牌型不正确
-
+    int NO_LANDLORD = 12;// 不叫地主
+    int IS_LANDLORD = 13;// 是地主
+    int LANDLORD_COUNT_FINISH = 14;// 不叫地主次数已用完
+    int LANDLORD_VICTORY = 15;// 地主胜利
+    int FARMER_VICTORY = 16;// 农民胜利
     // 信号类型 ---- end ------
 
 

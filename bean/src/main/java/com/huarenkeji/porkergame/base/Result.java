@@ -70,6 +70,14 @@ public class Result implements Serializable {
 
     }
 
+
+    /**
+     *  返回缺少必传参数结果 code 信息 数据
+     */
+    public static Result getLackParam() {
+        return new Result(NetConfig.LACK_PARAM_CODE,NetConfig.LACK_PARAM_MESSAGE,NetConfig.LACK_PARAM_ERROR);
+    }
+
     /**
      *  返回无效的key code 信息 数据
      */

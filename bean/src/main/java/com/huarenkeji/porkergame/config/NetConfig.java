@@ -29,4 +29,9 @@ public interface NetConfig {
     int KEY_INVALID_CODE = 104;
     String KEY_INVALID_MESSAGE = "key is invalid";
     String KEY_INVALID_ERROR = "key是无效的";
+
+    int LACK_PARAM_CODE = 105;
+    String LACK_PARAM_MESSAGE = "Lack of parameters";
+    String LACK_PARAM_ERROR = "缺少参数";
+
 }

@@ -27,7 +27,7 @@ public class DDZLogicBean {
      *
      * @return index 0 = 牌的类型 , index 1 = 牌的大小 , index 2 = 牌的长度
      */
-    public static int[] getPorkerType(List<DDZPorker> porkers) {
+    public static int[] getPorkerType(List<DDZPorker> porkers, int playType) {
 
         int type = UNKNOWN;
         int size = 0;
@@ -72,17 +72,16 @@ public class DDZLogicBean {
                     }
                 } else if ((size = isThreeAndOne(porkers)) != UNKNOWN) {
                     type = THREE_AND_ONE;
-                } else if ((size = isShunZi(porkers)) != UNKNOWN) {
+                } else if ((size = isShunZi(porkers, playType)) != UNKNOWN) {
                     type = SHUN_ZI;
-                } else if ((size = isDoubleShunZI(porkers)) != UNKNOWN) {
+                } else if ((size = isDoubleShunZI(porkers, playType)) != UNKNOWN) {
                     type = DOUBLE_SHUN_ZI;
                 }
                 break;
             default:
-
-                if ((size = isShunZi(porkers)) != UNKNOWN) {
+                if ((size = isShunZi(porkers, playType)) != UNKNOWN) {
                     type = SHUN_ZI;
-                } else if ((size = isDoubleShunZI(porkers)) != UNKNOWN) {
+                } else if ((size = isDoubleShunZI(porkers, playType)) != UNKNOWN) {
                     type = DOUBLE_SHUN_ZI;
                 } else if ((size = isAircraft(porkers)) != UNKNOWN) {
                     type = AIRCRAFT;
@@ -99,9 +98,9 @@ public class DDZLogicBean {
     }
 
 
-    public static boolean comparablePorker(List<DDZPorker> current, List<DDZPorker> last) {
-        int[] lastType = getPorkerType(last);
-        int[] currentType = getPorkerType(current);
+    public static boolean comparablePorker(List<DDZPorker> current, List<DDZPorker> last, int playType) {
+        int[] lastType = getPorkerType(last, playType);
+        int[] currentType = getPorkerType(current, playType);
 
         return comparablePorker(currentType, lastType);
 
@@ -188,8 +187,6 @@ public class DDZLogicBean {
         if (porkers.size() != 6) {
             return UNKNOWN;
         }
-
-
         int xiangTong = 1;
         int temp = -1;
         for (int i = 0; i < porkers.size(); i++) {
@@ -215,17 +212,13 @@ public class DDZLogicBean {
      * 牌是否为飞机
      */
     public static int isAircraft(List<DDZPorker> porkers) {
-
         if (porkers.size() < 6) {
             return UNKNOWN;
         }
-
         List<Integer> number = new ArrayList<>();
         // 连续三张一样的放进集合 比如 333444 或者 444555...
         for (int i = 0; i < porkers.size(); i++) {
-
             if (number.size() > 0) {
-
                 if (porkers.get(i).porkerSize == number.get(number.size() - 1)) {
                     if (number.size() - 3 > -1) {
                         if (porkers.get(i).porkerSize == number.get(number.size() - 3)) {
@@ -293,12 +286,18 @@ public class DDZLogicBean {
     /**
      * 牌是否为连队
      */
-    public static int isDoubleShunZI(List<DDZPorker> porkers) {
+    public static int isDoubleShunZI(List<DDZPorker> porkers, int playType) {
 
-        if (porkers.size() < 4 || porkers.get(0).porkerSize == DDZPorker.TWO_SIZE || porkers.size() % 2 != 0) {
-            return UNKNOWN;
+        int porkerSize = 6;
+        if (playType == Room.D_D_Z_THREE_TYPE) {
+            porkerSize = 6;
+        } else if (playType == Room.D_D_Z_FOUR_TYPE) {
+            porkerSize = 4;
         }
 
+        if (porkers.size() < porkerSize || porkers.get(0).porkerSize == DDZPorker.TWO_SIZE || porkers.size() % 2 != 0) {
+            return UNKNOWN;
+        }
         // 是否全部为对子
         for (int i = 0; i < porkers.size(); i += 2) {
             if (i + 1 >= porkers.size()) {
@@ -375,9 +374,16 @@ public class DDZLogicBean {
     /**
      * 牌是否为顺子
      */
-    public static int isShunZi(List<DDZPorker> porkers) {
+    public static int isShunZi(List<DDZPorker> porkers, int playType) {
 
-        if (porkers.size() < 4) {
+        int porkerSize = 5;
+        if (playType == Room.D_D_Z_THREE_TYPE) {
+            porkerSize = 5;
+        } else if (playType == Room.D_D_Z_FOUR_TYPE) {
+            porkerSize = 4;
+        }
+
+        if (porkers.size() < porkerSize) {
             return UNKNOWN;
         }
 
@@ -387,7 +393,7 @@ public class DDZLogicBean {
             if (i + 1 >= porkers.size()) {
                 continue;
             }
-
+            // 如果当前牌不是2、小王、大王并且下一张牌比当前牌小 说明是顺子
             if (porkers.get(i).porkerSize != DDZPorker.TWO_SIZE && porkers.get(i).porkerSize != DDZPorker.SMALL_KING_SIZE &&
                     porkers.get(i).porkerSize != DDZPorker.BIG_KING_SIZE &&
                     porkers.get(i).porkerSize - porkers.get(i + 1).porkerSize == 1) {
@@ -404,7 +410,7 @@ public class DDZLogicBean {
 
 
     /**
-     * 是否为炸蛋
+     * 是否为炸弹
      */
 
 
@@ -412,7 +418,6 @@ public class DDZLogicBean {
         if (porkers.size() != 4) {
             return UNKNOWN;
         }
-
         if (porkers.get(0).porkerSize == porkers.get(1).porkerSize && porkers.get(0).porkerSize == porkers.get(2).porkerSize
                 && porkers.get(0).porkerSize == porkers.get(3).porkerSize) {
             if (porkers.get(0).porkerSize == 0) {
@@ -420,7 +425,6 @@ public class DDZLogicBean {
             }
             return porkers.get(0).porkerSize * 4;
         }
-
         return UNKNOWN;
     }
 
@@ -431,7 +435,6 @@ public class DDZLogicBean {
 
 
     public static boolean isKingBomb(List<DDZPorker> porkers) {
-
         return porkers.size() == 2 && porkers.get(0).porkerSize == DDZPorker.BIG_KING_SIZE && porkers.get(0).porkerSize > porkers.get(1).porkerSize;
     }
 

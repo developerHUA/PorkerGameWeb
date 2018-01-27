@@ -20,7 +20,7 @@ public interface UserMapper {
     User loadUserByUserId(int userId);
 
 
-    @Select(value = "select userId,headimgurl,token,nickname,sex,diamond from users where openid = #{openid}")
+    @Select(value = "select userId,headimgurl,token,nickname,sex,diamond,openid from users where openid = #{openid}")
     User loginInfo(@Param("openid") String openid);
 
 
