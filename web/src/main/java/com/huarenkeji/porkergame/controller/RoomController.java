@@ -91,30 +91,12 @@ public class RoomController {
         User user = userService.loadUserByUserId(userId);
         if (user.getToken().equals(params.getParams().getToken())) {
             int roomNumber = params.getParams().getRoomNumber();
-            for (int j = 0; j < onLineRooms.size(); j++) {
-                if (onLineRooms.get(j).getRoomNumber() == roomNumber) {
-                    for (int i = 0; i < onLineRooms.get(j).getUsers().size(); i++) {
-                        if (onLineRooms.get(j).getUsers().get(i).getUserId() == userId) {
-                            onLineRooms.get(j).getUsers().remove(i);
-                            break;
-                        }
-                    }
-
-                    if (onLineRooms.get(j).getUsers().size() == 0) {
-                        offLineRooms.add(onLineRooms.get(j));
-                        onLineRooms.remove(j);
-                    }
-
-                    return Result.getSuccessResult();
-                }
-            }
-
-
+            exitRoom(roomNumber,userId);
+            return Result.getSuccessResult();
         } else {
             return Result.getInValidTokenResult();
         }
 
-        return Result.getNoRoomResult();
     }
 
 
@@ -135,7 +117,7 @@ public class RoomController {
             if (roomNumber == onLineRooms.get(i).getRoomNumber()) {
                 Room room = onLineRooms.get(i);
                 List<User> users = room.getUsers();
-                for (int j = users.size() - 1; j > 0; j--) {
+                for (int j = users.size() - 1; j >= 0; j--) {
                     if (users.get(j).getUserId() == userId) {
                         users.remove(j);
                         if (users.size() == 0) {

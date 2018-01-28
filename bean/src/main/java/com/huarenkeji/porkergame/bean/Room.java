@@ -4,11 +4,10 @@ import com.huarenkeji.porkergame.base.BaseParams;
 
 import java.util.List;
 
-public class Room extends BaseParams{
+public class Room extends BaseParams {
 
     public static final int D_D_Z_THREE_TYPE = 3; //三人斗地主类型
     public static final int D_D_Z_FOUR_TYPE = 4; //四人人斗地主类型
-
 
 
     public static final int NO_REMOVE = 0; //不去牌
@@ -42,6 +41,7 @@ public class Room extends BaseParams{
     public List<User> getUsers() {
         return users;
     }
+
     public void setUsers(List<User> users) {
         this.users = users;
     }
@@ -49,7 +49,21 @@ public class Room extends BaseParams{
     public int getRoomNumber() {
         return roomNumber;
     }
+
     public void setRoomNumber(int roomNumber) {
         this.roomNumber = roomNumber;
     }
+
+
+    public int getRoomPersonCount() {
+        if (this.playType == D_D_Z_FOUR_TYPE) {
+            return 4;
+        } else if (this.playType == D_D_Z_THREE_TYPE) {
+            return 3;
+        }
+
+        return 0;
+    }
+
+
 }

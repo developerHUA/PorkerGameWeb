@@ -27,7 +27,7 @@ public class DDZLogicBean {
      *
      * @return index 0 = 牌的类型 , index 1 = 牌的大小 , index 2 = 牌的长度
      */
-    public static int[] getPorkerType(List<DDZPorker> porkers, int playType) {
+    public static int[] getPorkerType(List<DDZPorker> porkers, int playType, int ruleType) {
 
         int type = UNKNOWN;
         int size = 0;
@@ -44,9 +44,10 @@ public class DDZLogicBean {
             case 2:
                 size = isDouble(porkers);
                 if (size != UNKNOWN) {
-                    if (porkers.get(0).porkerSize == 0) {
+                    if (porkers.get(0).porkerSize == 0 && ruleType != Room.NO_REMOVE) {
                         type = THREE_BOMB;
-                    } else if (porkers.get(0).porkerSize == DDZPorker.TWO_SIZE) {
+                    } else if (porkers.get(0).porkerSize == DDZPorker.TWO_SIZE &&
+                            (ruleType == Room.REMOVE_DOUBLE_TWO || ruleType == Room.REMOVE_ONE_AND_TWO)) {
                         type = TWO_BOMB;
                     } else {
                         type = DOUBLE;
@@ -98,9 +99,9 @@ public class DDZLogicBean {
     }
 
 
-    public static boolean comparablePorker(List<DDZPorker> current, List<DDZPorker> last, int playType) {
-        int[] lastType = getPorkerType(last, playType);
-        int[] currentType = getPorkerType(current, playType);
+    public static boolean comparablePorker(List<DDZPorker> current, List<DDZPorker> last, int playType, int ruleType) {
+        int[] lastType = getPorkerType(last, playType, ruleType);
+        int[] currentType = getPorkerType(current, playType, ruleType);
 
         return comparablePorker(currentType, lastType);
 

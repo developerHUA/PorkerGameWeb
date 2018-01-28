@@ -20,6 +20,7 @@ public interface SocketConfig {
     int LANDLORD_COUNT_FINISH = 14;// 不叫地主次数已用完
     int LANDLORD_VICTORY = 15;// 地主胜利
     int FARMER_VICTORY = 16;// 农民胜利
+    int EXCEED_ROOM_PERSON_COUNT = 17;// 房间人数已满
     // 信号类型 ---- end ------
 
 

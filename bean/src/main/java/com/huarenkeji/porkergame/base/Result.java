@@ -1,6 +1,7 @@
 package com.huarenkeji.porkergame.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.Gson;
 import com.huarenkeji.porkergame.config.NetConfig;
 
 import java.io.Serializable;
@@ -51,6 +52,11 @@ public class Result implements Serializable {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public String toJson() {
+       return new Gson().toJson(this);
+
     }
 
     /**
@@ -106,6 +112,15 @@ public class Result implements Serializable {
      */
     public static Result getNoRoomResult() {
         return new Result(NetConfig.NO_ROOM_CODE,NetConfig.NO_ROOM_MESSAGE,NetConfig.NO_ROOM_ERROR);
+    }
+
+
+
+    /**
+     *  返回参数不正确 code 信息 数据
+     */
+    public static Result getParamError() {
+        return new Result(NetConfig.PARAM_ERROR_CODE,NetConfig.PARAM_ERROR_MESSAGE,NetConfig.PARAM_ERROR_ERROR);
     }
 
 }

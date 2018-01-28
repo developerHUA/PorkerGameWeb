@@ -42,32 +42,33 @@ public class CheckKeyFilter implements Filter {
         if (request instanceof HttpServletRequest) {
             BodyReaderHttpServletRequestWrapper bodyRequest = new BodyReaderHttpServletRequestWrapper((HttpServletRequest) request);
             String json = RequestJsonUtils.getRequestPostStr(bodyRequest);
-            logger.debug("json = " + json);
 //            JSONObject jsonObject = JSON.parseObject(json);
 //            String key = jsonObject.getString("key");
 //            String time = jsonObject.getString("time");
 //            jsonObject = jsonObject.getJSONObject("params");
 //            String paramsJson = jsonObject.toJSONString();
+            try {
+                // Gson
+                JsonElement jsonElement = new JsonParser().parse(json);
+                String paramsJson = jsonElement.getAsJsonObject().get("params").toString();
+                String key = jsonElement.getAsJsonObject().get("key").getAsString();
+                String time = jsonElement.getAsJsonObject().get("time").getAsString();
 
-            // Gson
-            JsonElement jsonElement = new JsonParser().parse(json);
-            String paramsJson = jsonElement.getAsJsonObject().get("params").toString();
-            String key = jsonElement.getAsJsonObject().get("key").getAsString();
-            String time = jsonElement.getAsJsonObject().get("time").getAsString();
-
-            logger.debug("json = " + json);
-            logger.debug("paramsJson = " + paramsJson);
-            String curKey = MD5.md5(MD5.md5((paramsJson + time + NetConfig.SALT)));
-            if (curKey.equals(key)) {
-                // key is valid
-                chain.doFilter(bodyRequest, response);
-                return true;
-            } else {
-                logger.debug("curKey = " + curKey +" key = "+key);
-                String returnJson = new Gson().toJson(Result.getInValidKeyResult());
-                response.getWriter().append(returnJson).append("----").append(curKey);
+                String curKey = MD5.md5(MD5.md5((paramsJson + time + NetConfig.SALT)));
+                if (curKey.equals(key)) {
+                    // key is valid
+                    chain.doFilter(bodyRequest, response);
+                    return true;
+                } else {
+                    response.getWriter().append(Result.getInValidKeyResult().toJson());
+                    return false;
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+                response.getWriter().append(Result.getParamError().toJson());
                 return false;
             }
+
         }
 
         return true;

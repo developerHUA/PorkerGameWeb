@@ -34,4 +34,9 @@ public interface NetConfig {
     String LACK_PARAM_MESSAGE = "Lack of parameters";
     String LACK_PARAM_ERROR = "缺少参数";
 
+
+    int PARAM_ERROR_CODE = 106;
+    String PARAM_ERROR_MESSAGE = "param error";
+    String PARAM_ERROR_ERROR = "参数错误";
+
 }
