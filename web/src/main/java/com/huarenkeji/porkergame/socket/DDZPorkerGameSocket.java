@@ -89,31 +89,48 @@ public class DDZPorkerGameSocket {
                 sendSingle(message, session);
                 return;
             }
+            processOtherUserReady(roomSocket);
             roomSocket.add(this);
-
-
-            if (roomSocket.size() == roomConfig.getRoomPersonCount()) {
-
-                for (int i = 0; i < roomSocket.size(); i++) {
-                    for (int j = 0; j < i; j++) {
-                        roomSocket.get(i).userOrder.add(roomSocket.get(j));
-                    }
-
-                    for (int j = roomSocket.size() - 1; j > i; j--) {
-                        roomSocket.get(i).userOrder.add(0, roomSocket.get(j));
-                    }
-
-                    roomSocket.get(i).userOrder.add(roomSocket.get(i));
-                }
-
-            }
+            initUserOrder(roomSocket);
 
             logger.debug("有人加入房间：" + user.getNickname());
             // 有人加入房间
             processJoin(roomSocket);
+
+
         }
+    }
 
+    /**
+     * 处理比当前用户进来早的准备
+     */
+    private void processOtherUserReady(List<DDZPorkerGameSocket> roomSocket) {
+        // 是否有人准备，如果有给当前用户发通知
+        for (DDZPorkerGameSocket socket : roomSocket) {
+            if (socket != this && socket.isReady) {
+                String message = SocketBean.messageType(SocketConfig.READY, socket.user.getUserId()).toJson();
+                sendSingle(message, session);
+            }
+        }
+    }
 
+    /**
+     * 初始化用户顺序
+     */
+    private void initUserOrder(List<DDZPorkerGameSocket> roomSocket) {
+        if (roomSocket.size() == roomConfig.getRoomPersonCount()) {
+            for (int i = 0; i < roomSocket.size(); i++) {
+                for (int j = 0; j < i; j++) {
+                    roomSocket.get(i).userOrder.add(roomSocket.get(j));
+                }
+
+                for (int j = roomSocket.size() - 1; j > i; j--) {
+                    roomSocket.get(i).userOrder.add(0, roomSocket.get(j));
+                }
+
+                roomSocket.get(i).userOrder.add(roomSocket.get(i));
+            }
+        }
     }
 
 

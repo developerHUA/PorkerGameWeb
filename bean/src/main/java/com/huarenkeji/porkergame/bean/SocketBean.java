@@ -1,6 +1,7 @@
 package com.huarenkeji.porkergame.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.Gson;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SocketBean {
@@ -34,8 +35,7 @@ public class SocketBean {
     }
 
 
-
-    public static SocketBean messageType(int messageType,int userId) {
+    public static SocketBean messageType(int messageType, int userId) {
 
         SocketBean socketBean = new SocketBean();
         socketBean.setType(messageType);
@@ -43,10 +43,15 @@ public class SocketBean {
         return socketBean;
     }
 
-    public static SocketBean messageParams(int messageType,int userId,Object params) {
-        SocketBean socketBean = messageType(messageType,userId);
+    public static SocketBean messageParams(int messageType, int userId, Object params) {
+        SocketBean socketBean = messageType(messageType, userId);
         socketBean.setParams(params);
         return socketBean;
+    }
+
+    public String toJson() {
+        return new Gson().toJson(this);
+
     }
 
 }
