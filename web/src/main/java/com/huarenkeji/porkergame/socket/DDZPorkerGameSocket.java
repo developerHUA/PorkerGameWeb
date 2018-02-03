@@ -134,6 +134,19 @@ public class DDZPorkerGameSocket {
     }
 
 
+    private void gameOver(List<DDZPorkerGameSocket> roomSocket) {
+        for (DDZPorkerGameSocket aRoomSocket : roomSocket) {
+            aRoomSocket.isReady = false;
+            aRoomSocket.currentUserPorker.clear();
+            aRoomSocket.isLandlord = false;
+            aRoomSocket.isNoPlay = true;
+            aRoomSocket.noLocationCount = 0;
+        }
+
+    }
+
+
+
     @OnMessage
     public void onMessage(String message) {
         logger.debug("onMessage --- " + message);
@@ -190,24 +203,16 @@ public class DDZPorkerGameSocket {
      */
     private void processNoLandlord(List<DDZPorkerGameSocket> roomSocket) {
         noLocationCount++;
-        int index = 0;
-        if (roomSocket.get(roomSocket.size() - 1) == this) {
-            index = 0;
+        //　发送不叫地主信息
+        String noLandlord = SocketBean.messageType(SocketConfig.NO_LANDLORD, user.getUserId()).toJson();
+        sendRoom(roomSocket, noLandlord);
+        if (userOrder.get(0).noLocationCount >= 1) {
+            // 如果不叫地主次数用完　强行成为地主并且告诉客户端
+            processLandlordCountFinish(roomSocket, userOrder.get(0));
         } else {
-            for (int i = 0; i < roomSocket.size(); i++) {
-                if (roomSocket.get(i) == this) {
-                    index = i + 1;
-                    break;
-                }
-            }
+            // 告诉客户端现在地主用id
+            processIsLandlord(roomSocket, userOrder.get(0).user.getUserId());
         }
-        if (roomSocket.get(index).noLocationCount >= 1) {
-            processLandlordCountFinish(roomSocket, index);
-        } else {
-            processIsLandlord(roomSocket, index);
-        }
-
-
     }
 
     /**
@@ -221,10 +226,10 @@ public class DDZPorkerGameSocket {
     /**
      * 处理叫地主次数已用完
      */
-    private void processLandlordCountFinish(List<DDZPorkerGameSocket> roomSocket, int index) {
-        roomSocket.get(index).isLandlord = true;
+    private void processLandlordCountFinish(List<DDZPorkerGameSocket> roomSocket, DDZPorkerGameSocket socket) {
+        socket.isLandlord = true;
         currentUserPorker.addAll(landlordPorker);
-        String json = JSON.toJSONString(SocketBean.messageParams(SocketConfig.LANDLORD_COUNT_FINISH, roomSocket.get(index).user.getUserId(), landlordPorker));
+        String json = JSON.toJSONString(SocketBean.messageParams(SocketConfig.LANDLORD_COUNT_FINISH, socket.user.getUserId(), landlordPorker));
         sendRoom(roomSocket, json);
     }
 
@@ -282,15 +287,15 @@ public class DDZPorkerGameSocket {
 
         Random random = new Random();
         int landlordIndex = random.nextInt(roomSocket.size());
-        processIsLandlord(roomSocket, landlordIndex);
+        processIsLandlord(roomSocket, roomSocket.get(landlordIndex).user.getUserId());
     }
 
 
     /**
      * 处理当前地主是谁
      */
-    private void processIsLandlord(List<DDZPorkerGameSocket> roomSocket, int index) {
-        String json = JSON.toJSONString(SocketBean.messageType(SocketConfig.IS_LANDLORD, roomSocket.get(index).user.getUserId()));
+    private void processIsLandlord(List<DDZPorkerGameSocket> roomSocket, int userId) {
+        String json = JSON.toJSONString(SocketBean.messageType(SocketConfig.IS_LANDLORD, userId));
         sendRoom(roomSocket, json);
     }
 
@@ -312,7 +317,7 @@ public class DDZPorkerGameSocket {
         }
 
         List<DDZPorker> lastPorker = null;
-        for (int i = userOrder.size() - 1; i > 0; i--) {
+        for (int i = userOrder.size() - 2; i >= 0; i--) {
             if (!userOrder.get(i).isNoPlay) { //上个玩家出过牌
                 lastPorker = userOrder.get(i).playPorker;
                 break;
@@ -361,6 +366,7 @@ public class DDZPorkerGameSocket {
         } else {
             messageType = SocketConfig.FARMER_VICTORY;
         }
+        gameOver(roomSocket); // 重新初始化
         sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(messageType, user.getUserId())));
 
     }
@@ -416,13 +422,23 @@ public class DDZPorkerGameSocket {
 
     @OnClose
     public void onClose() {
-        allSocket.remove(roomConfig.getRoomNumber());
+        if (roomConfig != null) {
+            List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomConfig.getRoomNumber());
+
+            for (int i = 0; roomSocket != null && i < roomSocket.size(); i++) {
+                if (roomSocket.get(i) == this) {
+                    processExit(roomSocket);
+                    break;
+                }
+            }
+        }
     }
 
     /**
      * 发送给某个房间
      */
     private void sendRoom(List<DDZPorkerGameSocket> room, String message) {
+        logger.debug("room size = " + room.size());
         for (DDZPorkerGameSocket dDZPorkerGameSocket : room) {
             try {
                 logger.debug(dDZPorkerGameSocket.user.getNickname());
