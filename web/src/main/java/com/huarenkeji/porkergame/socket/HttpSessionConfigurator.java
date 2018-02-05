@@ -22,8 +22,6 @@ public class HttpSessionConfigurator extends ServerEndpointConfig.Configurator i
     public void modifyHandshake(ServerEndpointConfig config, HandshakeRequest request, HandshakeResponse response){
         HttpSession httpSession = (HttpSession)request.getHttpSession();
         if(httpSession == null) {
-            logger.debug("userService = ");
-            logger.debug("httpSession == null");
             return;
         }
 

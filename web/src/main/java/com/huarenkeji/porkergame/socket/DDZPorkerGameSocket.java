@@ -53,7 +53,7 @@ public class DDZPorkerGameSocket {
     @OnOpen
     public void onOpen(@PathParam(value = "roomNumber") int roomNumber,
                        @PathParam(value = "userId") int userId, @PathParam(value = "token") String token,
-                       Session session, EndpointConfig config) {
+                       Session session) {
         this.session = session;
 
         logger.debug("DDZPorkerGameSocket = " + this);
@@ -66,8 +66,6 @@ public class DDZPorkerGameSocket {
             return;
         }
 
-//        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-//        String roomNumber = (String) httpSession.getAttribute("roomNumber");
 
         roomConfig = RoomController.getRoom(roomNumber);
         if (roomConfig == null) {
@@ -83,6 +81,13 @@ public class DDZPorkerGameSocket {
             allSocket.put(roomNumber, list);
         } else {
             List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomNumber);
+            for (int i = 0; i < roomSocket.size(); i++) {
+                if (roomSocket.get(i).user.getUserId() == userId) {
+                    roomSocket.remove(i);
+
+                    roomSocket.add(i, this);
+                }
+            }
             if (roomSocket.size() >= roomConfig.getRoomPersonCount()) {
                 logger.debug("房间人数已满");
                 String message = JSON.toJSONString(SocketBean.messageType(SocketConfig.EXCEED_ROOM_PERSON_COUNT, userId));
@@ -144,7 +149,6 @@ public class DDZPorkerGameSocket {
         }
 
     }
-
 
 
     @OnMessage
@@ -385,8 +389,6 @@ public class DDZPorkerGameSocket {
      */
     private void processExit(List<DDZPorkerGameSocket> roomSocket) {
         RoomController.exitRoom(roomConfig.getRoomNumber(), user.getUserId());
-        String json = JSON.toJSONString(SocketBean.messageType(SocketConfig.EXIT_ROOM, user.getUserId()));
-        sendRoom(roomSocket, json);
         for (DDZPorkerGameSocket socket : roomSocket) {
             socket.userOrder.clear();
         }
@@ -394,6 +396,9 @@ public class DDZPorkerGameSocket {
         if (roomSocket.size() == 0) {
             allSocket.remove(roomConfig.getRoomNumber());
         }
+
+        String json = JSON.toJSONString(SocketBean.messageType(SocketConfig.EXIT_ROOM, user.getUserId()));
+        sendRoom(roomSocket, json);
     }
 
     /**
@@ -417,19 +422,26 @@ public class DDZPorkerGameSocket {
 
     @OnError
     public void onError(Throwable error) {
+        logger.debug("onError ");
         error.printStackTrace();
+        if (roomConfig != null) {
+            List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomConfig.getRoomNumber());
+            if (roomSocket != null) {
+                processExit(roomSocket);
+            }
+        }
     }
 
     @OnClose
     public void onClose() {
+        logger.debug("onClose ");
+        if (user != null) {
+            logger.debug("onClose " + user.getNickname());
+        }
         if (roomConfig != null) {
             List<DDZPorkerGameSocket> roomSocket = allSocket.get(roomConfig.getRoomNumber());
-
-            for (int i = 0; roomSocket != null && i < roomSocket.size(); i++) {
-                if (roomSocket.get(i) == this) {
-                    processExit(roomSocket);
-                    break;
-                }
+            if (roomSocket != null) {
+                processExit(roomSocket);
             }
         }
     }
