@@ -123,7 +123,7 @@ public class DDZLogicBean {
             return true;
         }
 
-        if (lastType[0] >= THREE_BOMB && currentType[0] > lastType[0]) {
+        if (lastType[0] >= THREE_BOMB && currentType[0]>= THREE_BOMB && currentType[0] > lastType[0]) {
             return true;
         }
 
@@ -436,7 +436,7 @@ public class DDZLogicBean {
 
 
     public static boolean isKingBomb(List<DDZPorker> porkers) {
-        return porkers.size() == 2 && porkers.get(0).porkerSize == DDZPorker.BIG_KING_SIZE && porkers.get(0).porkerSize > porkers.get(1).porkerSize;
+        return porkers.size() == 2 && porkers.get(0).porkerSize == DDZPorker.BIG_KING_SIZE && porkers.get(1).porkerSize ==DDZPorker.BIG_KING_SIZE;
     }
 
 
