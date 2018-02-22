@@ -46,6 +46,8 @@ public class DDZPorkerGameSocket {
     private int noLocationCount;
     private boolean isLandlord; //当前是否是地主
     private boolean isNoPlay; //当前用户是否没出牌
+    private int userScore; // 当前用户分数
+    private int gameScore = 1; // 当前这一局的分数
 
     @Autowired
     UserService userService;
@@ -140,12 +142,21 @@ public class DDZPorkerGameSocket {
 
 
     private void gameOver(List<DDZPorkerGameSocket> roomSocket) {
-        for (DDZPorkerGameSocket aRoomSocket : roomSocket) {
-            aRoomSocket.isReady = false;
-            aRoomSocket.currentUserPorker.clear();
-            aRoomSocket.isLandlord = false;
-            aRoomSocket.isNoPlay = true;
-            aRoomSocket.noLocationCount = 0;
+        for (DDZPorkerGameSocket gameSocket : roomSocket) {
+            if (isLandlord && gameSocket != this) {
+                userScore += gameScore;
+                gameSocket.userScore -= gameScore;
+            } else if (!isLandlord && !gameSocket.isLandlord) {
+                gameSocket.userScore += gameScore;
+            } else if (!isLandlord && gameSocket.isLandlord) {
+                gameSocket.userScore -= gameScore;
+            }
+            gameSocket.isReady = false;
+            gameSocket.gameScore = 1;
+            gameSocket.currentUserPorker.clear();
+            gameSocket.isLandlord = false;
+            gameSocket.isNoPlay = true;
+            gameSocket.noLocationCount = 0;
         }
 
     }
@@ -303,6 +314,24 @@ public class DDZPorkerGameSocket {
         sendRoom(roomSocket, json);
     }
 
+
+    private void processScoreChanged(int porkerType, List<DDZPorkerGameSocket> roomSocket) {
+        if (porkerType >= DDZLogicBean.THREE_BOMB) { // 牌型为炸弹
+            if (porkerType == DDZLogicBean.THREE_BOMB_FOUR) {
+                // 如果是四张3 则分数 * 6 也就是左移 3位
+                gameScore = gameScore << 3;
+            } else {
+                // 如果是普通炸弹 则分数 * 2 也就是左移 1位
+                gameScore = gameScore << 1;
+            }
+            for (DDZPorkerGameSocket gameSocket : roomSocket) {
+                gameSocket.gameScore = gameScore;
+                String json = SocketBean.messageParams(SocketConfig.SCORE_CHANGED, gameSocket.user.getUserId(), gameScore).toJson();
+                sendSingle(json, gameSocket.session);
+            }
+        }
+    }
+
     /**
      * 处理用户出牌
      */
@@ -333,6 +362,7 @@ public class DDZPorkerGameSocket {
         if (DDZLogicBean.comparablePorker(playPorker, lastPorker, roomConfig.getPlayType(), roomConfig.getRuleType())) {
             sendJson = JSON.toJSONString(SocketBean.messageParams(SocketConfig.PLAY_PORKER, user.getUserId(), playPorker));
             sendRoom(roomSocket, sendJson);
+            processScoreChanged(typeArr[0], roomSocket);
             isNoPlay = false;
             for (int i = currentUserPorker.size() - 1; i >= 0; i--) {
                 for (int j = playPorker.size() - 1; j >= 0; j--) {

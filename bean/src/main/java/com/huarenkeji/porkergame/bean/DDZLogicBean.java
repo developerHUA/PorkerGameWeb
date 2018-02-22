@@ -15,11 +15,11 @@ public class DDZLogicBean {
     private static final int AIRCRAFT = 8; // 飞机类型
     private static final int DOUBLE_SHUN_ZI = 9; // 连对
     private static final int FOUR_AND_TWO = 10; // 四带二
-    private static final int THREE_BOMB = 11; // 三炸
-    private static final int TWO_BOMB = 12; // 二炸
-    private static final int BOMB = 13; // 炸弹类型
-    private static final int THREE_BOMB_FOUR = 14; // 三炸四张
-    private static final int KING_BOMB = 15; // 王炸类型
+    public static final int THREE_BOMB = 11; // 三炸
+    public static final int TWO_BOMB = 12; // 二炸
+    public static final int BOMB = 13; // 炸弹类型
+    public static final int THREE_BOMB_FOUR = 14; // 三炸四张
+    public static final int KING_BOMB = 15; // 王炸类型
 
 
     /**
@@ -436,7 +436,7 @@ public class DDZLogicBean {
 
 
     public static boolean isKingBomb(List<DDZPorker> porkers) {
-        return porkers.size() == 2 && porkers.get(0).porkerSize == DDZPorker.BIG_KING_SIZE && porkers.get(1).porkerSize ==DDZPorker.BIG_KING_SIZE;
+        return porkers.size() == 2 && porkers.get(0).porkerSize == DDZPorker.BIG_KING_SIZE && porkers.get(1).porkerSize ==DDZPorker.SMALL_KING_SIZE;
     }
 
 
