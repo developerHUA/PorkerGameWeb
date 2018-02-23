@@ -58,12 +58,9 @@ public class DDZPorkerGameSocket {
                        Session session) {
         this.session = session;
 
-        logger.debug("DDZPorkerGameSocket = " + this);
 
         user = userService.loadUserByUserId(userId);
         if (user == null || !user.getToken().equals(token)) {
-            logger.debug("user = " + user);
-            logger.debug("token = " + token);
             user = null;
             return;
         }
@@ -72,7 +69,6 @@ public class DDZPorkerGameSocket {
         roomConfig = RoomController.getRoom(roomNumber);
         if (roomConfig == null) {
             user = null;
-            logger.debug("roomConfig = null");
             return;
         }
 
@@ -360,7 +356,11 @@ public class DDZPorkerGameSocket {
 
 
         if (DDZLogicBean.comparablePorker(playPorker, lastPorker, roomConfig.getPlayType(), roomConfig.getRuleType())) {
-            sendJson = JSON.toJSONString(SocketBean.messageParams(SocketConfig.PLAY_PORKER, user.getUserId(), playPorker));
+            PlayPorker playPorkerBean = new PlayPorker();
+            playPorkerBean.setPorkerList(playPorker);
+            playPorkerBean.setType(typeArr[0]);
+            playPorkerBean.setPorkerSize(typeArr[1]);
+            sendJson = JSON.toJSONString(SocketBean.messageParams(SocketConfig.PLAY_PORKER, user.getUserId(), playPorkerBean));
             sendRoom(roomSocket, sendJson);
             processScoreChanged(typeArr[0], roomSocket);
             isNoPlay = false;
