@@ -137,27 +137,6 @@ public class DDZPorkerGameSocket {
     }
 
 
-    private void gameOver(List<DDZPorkerGameSocket> roomSocket) {
-        for (DDZPorkerGameSocket gameSocket : roomSocket) {
-            if (isLandlord && gameSocket != this) {
-                userScore += gameScore;
-                gameSocket.userScore -= gameScore;
-            } else if (!isLandlord && !gameSocket.isLandlord) {
-                gameSocket.userScore += gameScore;
-            } else if (!isLandlord && gameSocket.isLandlord) {
-                gameSocket.userScore -= gameScore;
-            }
-            gameSocket.isReady = false;
-            gameSocket.gameScore = 1;
-            gameSocket.currentUserPorker.clear();
-            gameSocket.isLandlord = false;
-            gameSocket.isNoPlay = true;
-            gameSocket.noLocationCount = 0;
-        }
-
-    }
-
-
     @OnMessage
     public void onMessage(String message) {
         logger.debug("onMessage --- " + message);
@@ -249,12 +228,12 @@ public class DDZPorkerGameSocket {
      * 处理用户准备
      */
     private void processReady(List<DDZPorkerGameSocket> roomSocket) {
-        isReady = true;
-        isLandlord = false;
-        noLocationCount = 0;
-        currentUserPorker.clear();
+        isReady = true; //状态改为已准备
+        isLandlord = false; // 重新初始化地主
+        noLocationCount = 0; // 重新初始化不叫地主次数
         if (roomSocket.size() == roomConfig.getPlayType()) {
             for (DDZPorkerGameSocket socket : roomSocket) {
+                socket.currentUserPorker.clear(); // 清除上一句扑克
                 if (!socket.isReady) {
                     sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(SocketConfig.READY, user.getUserId())));
                     return;
@@ -402,6 +381,43 @@ public class DDZPorkerGameSocket {
         }
         gameOver(roomSocket); // 重新初始化
         sendRoom(roomSocket, JSON.toJSONString(SocketBean.messageType(messageType, user.getUserId())));
+        sendUserScoreMessage(roomSocket);
+
+
+    }
+
+    private void gameOver(List<DDZPorkerGameSocket> roomSocket) {
+        for (DDZPorkerGameSocket gameSocket : roomSocket) {
+            if (isLandlord && gameSocket != this) {//地主胜利
+                userScore += gameSocket.gameScore;
+                gameSocket.userScore -= gameSocket.gameScore;
+            } else if (!isLandlord && !gameSocket.isLandlord) { // 农民胜利
+                gameSocket.userScore += gameSocket.gameScore;
+            } else if (!isLandlord && gameSocket.isLandlord) { //农民胜利
+                gameSocket.userScore -= gameSocket.gameScore;
+                gameSocket.userScore -= gameSocket.gameScore;
+            }
+            gameSocket.isReady = false;
+            gameSocket.gameScore = 1;
+            gameSocket.currentUserPorker.clear();
+            gameSocket.isNoPlay = true;
+            gameSocket.noLocationCount = 0;
+        }
+
+    }
+
+    private void sendUserScoreMessage(List<DDZPorkerGameSocket> roomSocket) {
+        for (DDZPorkerGameSocket gameSocket : roomSocket) {
+            SocketUserScore socketUserScore = new SocketUserScore();
+            socketUserScore.setUserScoreList(new ArrayList<>());
+            for (int i = 0; i < roomSocket.size(); i++) {
+                socketUserScore.getUserScoreList().add(new UserScore());
+                socketUserScore.getUserScoreList().get(i).setScore(roomSocket.get(i).userScore);
+                socketUserScore.getUserScoreList().get(i).setUserId(roomSocket.get(i).user.getUserId());
+            }
+            String message = SocketBean.messageParams(SocketConfig.USER_SCORE_CHANGED,user.getUserId(),socketUserScore).toJson();
+            sendSingle(message,gameSocket.session);
+        }
 
     }
 

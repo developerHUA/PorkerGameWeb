@@ -21,7 +21,8 @@ public interface SocketConfig {
     int LANDLORD_VICTORY = 15;// 地主胜利
     int FARMER_VICTORY = 16;// 农民胜利
     int EXCEED_ROOM_PERSON_COUNT = 17;// 房间人数已满
-    int SCORE_CHANGED = 18;// 当前分数发生变化
+    int SCORE_CHANGED = 18;// 当前游戏分数发生变化
+    int USER_SCORE_CHANGED = 19;// 当前用户分数发生变化
     // 信号类型 ---- end ------
 
 
