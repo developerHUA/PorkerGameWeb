@@ -321,7 +321,7 @@ public class DDZLogicBean {
             if (porkers.get(i).porkerSize - porkers.get(i + 2).porkerSize == 1) {
                 size += (porkers.get(i).porkerSize * 2);
                 continue;
-            }
+            } 
 
             return UNKNOWN;
         }
