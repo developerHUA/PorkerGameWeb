@@ -70,9 +70,11 @@ public class RoomController {
         User user = userService.loadUserByUserId(params.getParams().getUserId());
         if (user.getToken().equals(params.getParams().getToken())) {
             for (Room onLineRoom : onLineRooms) {
-                if (onLineRoom.getRoomNumber() == room.getRoomNumber()) {
+                if (onLineRoom.getRoomNumber() == room.getRoomNumber() && onLineRoom.getUsers().size() < onLineRoom.getRoomPersonCount()) {
                     onLineRoom.getUsers().add(user);
-                    logger.debug(user.getUserId() + " 加入房间：" + onLineRoom.getRoomNumber());
+
+                    return Result.getSuccessResult(onLineRoom);
+                }else if(onLineRoom.getRoomNumber() == room.getRoomNumber()) {
                     return Result.getSuccessResult(onLineRoom);
                 }
             }
