@@ -88,6 +88,8 @@ public class DDZPorkerGameSocket {
             }
             if (roomSocket.size() >= roomConfig.getRoomPersonCount()) {
                 logger.debug("房间人数已满");
+                roomConfig = null;
+                user = null;
                 String message = JSON.toJSONString(SocketBean.messageType(SocketConfig.EXCEED_ROOM_PERSON_COUNT, userId));
                 sendSingle(message, session);
                 return;
@@ -231,7 +233,7 @@ public class DDZPorkerGameSocket {
         isReady = true; //状态改为已准备
         isLandlord = false; // 重新初始化地主
         noLocationCount = 0; // 重新初始化不叫地主次数
-        if (roomSocket.size() == roomConfig.getPlayType()) {
+        if (roomSocket.size() == roomConfig.getRoomPersonCount()) {
             for (DDZPorkerGameSocket socket : roomSocket) {
                 socket.currentUserPorker.clear(); // 清除上一句扑克
                 if (!socket.isReady) {
