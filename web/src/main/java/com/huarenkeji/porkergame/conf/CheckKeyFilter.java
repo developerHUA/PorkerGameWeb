@@ -39,36 +39,40 @@ public class CheckKeyFilter implements Filter {
 
 
     private boolean checkKey(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request instanceof HttpServletRequest) {
+        if (request instanceof HttpServletRequest  ) {
             BodyReaderHttpServletRequestWrapper bodyRequest = new BodyReaderHttpServletRequestWrapper((HttpServletRequest) request);
-            String json = RequestJsonUtils.getRequestPostStr(bodyRequest);
+
+            if("POST".equals(((HttpServletRequest) request).getMethod())) {
+                String json = RequestJsonUtils.getRequestPostStr(bodyRequest);
 //            JSONObject jsonObject = JSON.parseObject(json);
 //            String key = jsonObject.getString("key");
 //            String time = jsonObject.getString("time");
 //            jsonObject = jsonObject.getJSONObject("params");
 //            String paramsJson = jsonObject.toJSONString();
-            try {
-                // Gson
-                JsonElement jsonElement = new JsonParser().parse(json);
-                String paramsJson = jsonElement.getAsJsonObject().get("params").toString();
-                String key = jsonElement.getAsJsonObject().get("key").getAsString();
-                String time = jsonElement.getAsJsonObject().get("time").getAsString();
+                try {
+                    // Gson
+                    JsonElement jsonElement = new JsonParser().parse(json);
+                    String paramsJson = jsonElement.getAsJsonObject().get("params").toString();
+                    String key = jsonElement.getAsJsonObject().get("key").getAsString();
+                    String time = jsonElement.getAsJsonObject().get("time").getAsString();
 
-                String curKey = MD5.md5(MD5.md5((paramsJson + time + NetConfig.SALT)));
-                if (curKey.equals(key)) {
-                    // key is valid
-                    chain.doFilter(bodyRequest, response);
-                    return true;
-                } else {
-                    response.getWriter().append(Result.getInValidKeyResult().toJson());
+                    String curKey = MD5.md5(MD5.md5((paramsJson + time + NetConfig.SALT)));
+                    if (curKey.equals(key)) {
+                        // key is valid
+                        chain.doFilter(bodyRequest, response);
+                        return true;
+                    } else {
+                        response.getWriter().append(Result.getInValidKeyResult().toJson());
+                        return false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.getWriter().append(Result.getParamError().toJson());
                     return false;
                 }
-            }catch (Exception e) {
-                e.printStackTrace();
-                response.getWriter().append(Result.getParamError().toJson());
-                return false;
+            }else {
+                chain.doFilter(bodyRequest, response);
             }
-
         }
 
         return true;
