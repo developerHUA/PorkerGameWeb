@@ -66,7 +66,8 @@ public class DDZLogicBean {
 
             case 4:
                 if ((size = isBomb(porkers)) != UNKNOWN) {
-                    if (porkers.get(0).porkerSize == 0) {
+                    if (porkers.get(0).porkerSize == 0 &&
+                            (ruleType == Room.REMOVE_DOUBLE_TWO || ruleType == Room.REMOVE_ONE_AND_TWO)) {
                         type = THREE_BOMB_FOUR;
                     } else {
                         type = BOMB;
