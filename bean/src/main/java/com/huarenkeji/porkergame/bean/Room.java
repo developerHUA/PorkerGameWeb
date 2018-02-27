@@ -20,6 +20,7 @@ public class Room extends BaseParams {
     private List<User> users; //房间内用户
     private int playType; // 房间类型 目前只有斗地主类型
     private int ruleType; //去掉牌的类型
+    private int defaultScore; //房间底分
 
     public int getRuleType() {
         return ruleType;
@@ -65,5 +66,15 @@ public class Room extends BaseParams {
         return 0;
     }
 
+    public int getDefaultScore() {
+        if (0 == defaultScore) {
+            return 1;
+        }
+        return defaultScore;
+    }
+
+    public void setDefaultScore(int defaultScore) {
+        this.defaultScore = defaultScore;
+    }
 
 }
